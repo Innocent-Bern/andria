@@ -15,7 +15,7 @@ export default function Signup() {
     const handleSubmit = (e) => {
         // Handle form submission
         e.preventDefault()
-        const user = SIGNUP("innocentbern1235@gmail.com", "@Jnduta1980")
+        const user = SIGNUP(email, password)
         console.log(`Signed user is: ${user}`);
         dispatch({ type: "LOGIN", payload: user })
 

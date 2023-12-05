@@ -12,7 +12,7 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const user = LOGIN("innocentbern22@gmail.com", "@Jnduta1980");
+        const user = LOGIN(email, password);
         dispatch({ type: "LOGIN", payload: user })
     }
     return (
