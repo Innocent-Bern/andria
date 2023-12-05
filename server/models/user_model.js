@@ -14,7 +14,6 @@ const user_schema = new mongoose.Schema({
     },
     user_name: {
         type: String,
-        required: true
     },
     user_books: [
         {
@@ -74,7 +73,7 @@ user_schema.statics.login = async function(email, password){
         throw Error("Incorrect email address")
     }
     
-    const match = await bcrypt.compare(password, patient.password)
+    const match = await bcrypt.compare(password, andria_user.password)
     
     if(!match){
         throw Error("Incorrect password")

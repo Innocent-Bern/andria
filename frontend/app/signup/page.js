@@ -2,52 +2,40 @@
 
 import { useState } from 'react'
 import styles from '../page.module.css'
+import { SIGNUP } from '../hooks/userauth'
+import { useAuthContext } from '../hooks/useAuthContext'
 
 export default function Signup() {
     // User sign up page
+    const { dispatch } = useAuthContext();
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
 
-    const handleSubmit = (e)=>{
+    const handleSubmit = (e) => {
         // Handle form submission
         e.preventDefault()
-        /*signupUser(
-            {
-                variables: {email: email, password: password},
-                onCompleted : (data)=>{
-                    // Add user to local storage\
-                    const user = data.signupUser.user.id
-                    const token = data.signupUser.token
-                    localStorage.setItem("user", JSON.stringify(user))
-                    localStorage.setItem("token", JSON.stringify(token))
-
-                    // update the user auth context
-                    dispatch({type: "LOGIN", payload: user})
-
-                    // redirect to available books page
-                    navigate(`/${user}/books`, { replace: true });
-                }
-            }
-        )*/       
+        const user = SIGNUP("innocentbern1235@gmail.com", "@Jnduta1980")
+        console.log(`Signed user is: ${user}`);
+        dispatch({ type: "LOGIN", payload: user })
 
     }
     return (
         <main className={styles.Signup}>
-            <form className={styles.Signup_form} onSubmit={ handleSubmit }>
+            <form className={styles.Signup_form} onSubmit={handleSubmit}>
                 <h1>Sign up</h1>
                 <label>Email Address</label>
-                <input 
-                    type="email" 
-                    onChange={(e)=>setEmail(e.target.value)}
+                <input
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
                     value={email}
                     placeholder="Email Address"
                     required
                 />
                 <label>Password</label>
-                <input 
-                    type="password" 
-                    onChange={(e)=>setPassword(e.target.value)}
+                <input
+                    type="password"
+                    onChange={(e) => setPassword(e.target.value)}
                     value={password}
                     placeholder="Password"
                     required

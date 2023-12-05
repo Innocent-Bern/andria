@@ -2,14 +2,18 @@
 
 import { useState } from "react"
 import styles from "../page.module.css"
+import { LOGIN } from "../hooks/userauth";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export default function Login() {
-
+    const {dispatch} = useAuthContext();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        const user = LOGIN("innocentbern22@gmail.com", "@Jnduta1980");
+        dispatch({ type: "LOGIN", payload: user })
     }
     return (
         <div className={styles.Signup}>
