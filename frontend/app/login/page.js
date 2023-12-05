@@ -10,14 +10,14 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        const user = LOGIN(email, password);
+        const user = await LOGIN(email, password);
         dispatch({ type: "LOGIN", payload: user })
     }
     return (
         <div className={styles.Signup}>
-            <form className={styles.Signup_form} onSubmit={ handleSubmit }>
+            <form className={styles.Signup_form} onSubmit={ handleSubmit } autoComplete="off">
                 <h1>Login</h1>
                 <label>Email Address</label>
                 <input 
