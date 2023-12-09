@@ -4,16 +4,19 @@ import { useState } from "react"
 import styles from "../page.module.css"
 import { LOGIN } from "../hooks/userauth";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
     const {dispatch} = useAuthContext();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         const user = await LOGIN(email, password);
-        dispatch({ type: "LOGIN", payload: user })
+        dispatch({ type: "LOGIN", payload: user });
+        router.push('/available_books');
     }
     return (
         <div className={styles.Signup}>

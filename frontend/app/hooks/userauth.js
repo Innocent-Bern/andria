@@ -1,5 +1,7 @@
+const backend_uri = "http://localhost:8080/api";
+
 export async function SIGNUP(email, password) {
-  const res = await fetch('http://localhost:8080/api/signup', {
+  const res = await fetch(`${backend_uri}/signup`, {
     method: 'POST',
     mode: "cors",
     headers: {
@@ -13,7 +15,7 @@ export async function SIGNUP(email, password) {
   // Add user to local storage
   const user_id = data.user_id;
   const token = data.token;
-  localStorage.setItem("User", JSON.stringify(user_id));
+  localStorage.setItem("user", JSON.stringify(user_id));
   localStorage.setItem("token", JSON.stringify(token));
 
   // handle errors
@@ -22,7 +24,7 @@ export async function SIGNUP(email, password) {
 }
 
 export async function LOGIN(email, password) {
-  const res = await fetch('http://localhost:8080/api/login', {
+  const res = await fetch(`${backend_uri}/login`, {
     method: 'POST',
     mode: "cors",
     headers: {
@@ -36,7 +38,7 @@ export async function LOGIN(email, password) {
   // Add user to local storage
   const user_id = data.user_id;
   const token = data.token;
-  localStorage.setItem("User", JSON.stringify(user_id));
+  localStorage.setItem("user", JSON.stringify(user_id));
   localStorage.setItem("token", JSON.stringify(token));
 
   // handle errors

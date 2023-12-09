@@ -1,3 +1,6 @@
+# gcp private key
+./gcp_private_key.json
+
 # Logs
 logs
 *.log

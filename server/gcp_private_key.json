@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "bookapp-360717",
+  "private_key_id": "a8d059088bd69eef4b319eaa230c2788b8125fbd",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCb1y+ElhluKPDA\n4POZUTa24bK5S1h19LnSVpMnA2e22VSbbQgk/MU7+osnY3JtoanZ3xraBQ3YZkX1\nkhW8KsbNN5hCDrML7+y4nN8Q8nZc7Z6EYRboUEFXb2rxcj3n/vQM/dvHCw/jHAyt\nn8P9Sbv59KT+S7HYOBhNUo+YdJfHF0T9Oz5nXjvIzxp2sQjE3YqFyZ2jLHIXYm3c\nXsmNOq+md5AhP85/eviLFV+6F2PNqNbFjkdP5sC3thy71N6b+MNkc32JNrsDWaMe\n3+0o4OYuKV4GdMBnda+3jaQbljW7FD8ZjV3+xz5hyVtUfAFQ5+G93TFJc8NtTaUg\ne9PGF1/vAgMBAAECggEAFi6Ol0WyKvRC3da8dbc8nX1fWMaOZIPIAKt4A0FAfaNO\nSq09+oh2yS8ZUtWcj67yI+PWHkWX5JRyIskqCirgjzdO7HV2gMgkHrGdgqZbDfvN\n6LPVHzjFLt0vZgdHzoIuBLy25WGqtOiPhBXN6iXuTrQcLrdhghBB9/I8zuDRoHHI\n2Du5hvwWVupPYcNB/keAmRcqwnhv+k/gKAD0S2EiTf+bE6lHRanqfc2LTt6aFj8P\neFtPv9IBqDQy286WgSCG0LboFeiu0WFv992oXs610KqRW3wtQAS+9qVjq5040YNa\ntkPtx85vaSeWsb7UqGyXmx5N5z87huqfGiwVcZWmmQKBgQDTp+T9Trup2epyaRRL\nMg9to0zTIXLn/wzqHC0Ovy/7c/lxS+9OlnVJrDpw4dlVWteFpryBc7DZPaoX59rJ\noTdDxChODwttseBBoP+PS470+DuUJkSsa7e0D4dY6rByytRWuHgEuE+2xTL3lpZR\nMmZxXepD2BW5YgmtT3onSACipQKBgQC8faddaEk3Cn4Qup2LBsj7+3VI6595bPIX\n1oVZrt9vPOC42MM24EpCcyq1IRj9rPmcg49+lh41IqvpKkFjqs24te+Oz6JEV7Je\n9WbzfaQ350G8pYk4mLMPpICN0GRBAtCZzSDWSWEOj754V68eoqgKqzgaLbTwovfE\nRkQ7+Z4YAwKBgFn8PJ/xVFnvOvzvbeBWZTbQwb3Vr7uwtPXnisSFRkoa0Yd4qEJ6\nN11eKu6JJtRiLdU1wVksLZj+3Y0SVvN4Zj2abSRawxodEOH2KBDtJ9dAnlvrNTE1\nDsIwA/Qqu1/imgpQnT4sej+TcYrP7BKTYfh63DmB6iKJ6uFTM/T1aMe9AoGAa/i6\nd2o2jl3nSuPrPOk9FgK783JtXpwGrZsHthDTEqBXxer9ICEoyJm5/BmifCWqsno2\nJ3gMg7mBqkW3QUVlJIqrWC4eMHHfzj9aot30xMUmxc45JX9rCunbbeDSnN7k6UU0\nqytLepDitYLc4HqiMcJUl8JY5IMl1Hu/uG9LnUsCgYANPdUkdIO1uobh43+NG1Uz\noKAyJhdl/zrlS0SdwaVwiNBBWd2DV4mjzVX0Btc/b/fyZdPfPZ3wVLaaGNVEyjiK\nozr/2xqMEGa+p+F4JCUXcC+Q1zbrybX/2Nl8OU78594z4tMW1vu5ujkQ13d5eLOb\nIsOnp2ma6/mClZEq9euo/w==\n-----END PRIVATE KEY-----\n",
+  "client_email": "alexandria@bookapp-360717.iam.gserviceaccount.com",
+  "client_id": "110311103976654353579",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/alexandria%40bookapp-360717.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
