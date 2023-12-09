@@ -55,6 +55,7 @@ export async function GET_BOOK_GOOGLE(title, author) {
         body: JSON.stringify({ title, author })
     });
     const data = await res.json();
+    console.log(data);
     return data;
 }
 

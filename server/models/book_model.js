@@ -18,7 +18,7 @@ const bookSchema = new mongoose.Schema({
             owner_id: {
                 type: String
             },
-            image_key: {
+            image_name: {
                 type: String,
             },
             image_url: {

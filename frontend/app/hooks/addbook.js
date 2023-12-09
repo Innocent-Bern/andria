@@ -31,6 +31,18 @@ export async function UPLOAD_IMAGE(formData) {
     const data = await res.json();
     return data;
 }
-export async function ADD_BOOK() {
+
+export async function ADD_BOOK(book_details) {
     // Handles users adding a new book
+    const res = await fetch(`${backend_uri}/add_new_book`, {
+	    method: "POST",
+        mode: "cors",
+	    headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(book_details)
+    });
+    const data = await res.json();
+    return data;
 }

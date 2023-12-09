@@ -71,6 +71,7 @@ const find_book_db = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+
 // upload users book image to gcp
 const upload_image = async (req, res) => {
     /**
@@ -78,6 +79,8 @@ const upload_image = async (req, res) => {
      */
     const myBucket = storage.bucket('andria_user_book_images');
 
+    // handle file deletion after upload
+    const unlinkAsync = promisify(fs.unlink);
 
     myBucket.upload(
         req.file.path,
@@ -88,6 +91,9 @@ const upload_image = async (req, res) => {
             if (err) {
                 console.error(`Error uploading: ${err}`);
                 res.status(400).json({ error: "Couldn't upload image" })
+
+                // delete file
+                await unlinkAsync(req.file.path);
             } else {
                 // Make the file public
                 file.makePublic(async function (err) {
@@ -95,14 +101,25 @@ const upload_image = async (req, res) => {
                         res.status(400).json({ error: "Couldn't make image public" })
                     } else {
                         const publicUrl = file.publicUrl();
-                        res.status(200).json(publicUrl);
+                        const fileName = file.name;
+                        res.status(200).json({ publicUrl, fileName });
                     }
                 })
-                // handle file deletion after upload
-                const unlinkAsync = promisify(fs.unlink);
+                // delete file
                 await unlinkAsync(req.file.path);
             }
         })
+}
+
+// Add new book 
+const add_new_book = async (req, res) => {
+    const { title, author, genre, thumbnail_url, image_name, image_url, owner_id } = req.body;
+    try {
+        const added_book = await Book.create({title, author, genre, thumbnail_url, book_owners: [{_id: owner_id, image_name, image_url}]});
+        res.status(200).json({ added_book });
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
 }
 
 // Add new copy of an available book
@@ -132,5 +149,5 @@ const get_book_google = async (req, res) => {
 
 module.exports = {
     user_sign_up, user_login, available_books, google_book_search, find_book_db,
-    add_new_copy, get_book_google, upload_image
+    add_new_copy, get_book_google, upload_image, add_new_book
 };

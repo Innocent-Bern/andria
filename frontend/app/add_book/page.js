@@ -9,11 +9,16 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../page.module.css'
-import { GET_BOOK_GOOGLE } from '../hooks/getbooks';
+import { GET_BOOK_GOOGLE, GET_BOOK_DB } from '../hooks/getbooks';
+import { UPLOAD_IMAGE, ADD_BOOK } from '../hooks/addbook';
 
 export default function AddBook() {
     const router = useRouter();
-    const owner_id = JSON.parse(localStorage.getItem("user"))
+
+    let owner_id;
+    if (typeof window !== "undefined") {
+        owner_id = JSON.parse(localStorage.getItem("user"));
+    }
 
     /*----------------------------handle aside books-------------------------------------------------*/
     // const { loading, error, data: getBooksData } = useQuery(GET_BOOKS);
@@ -30,7 +35,9 @@ export default function AddBook() {
     const [genre, setGenre] = useState("")
     const [author, setAuthor] = useState("")
     const [description, setDescription] = useState("")
-    const [imageFile, setImageFile] = useState(null)
+    const [image, setImage] = useState(null)
+    const [imageName, setImageName] = useState(null)
+    const [imageUrl, setImageUrl] = useState(null)
     const [thumbnail, setThumbnail] = useState(null)
 
     const [foundBooks, setFoundBooks] = useState()
@@ -39,68 +46,81 @@ export default function AddBook() {
 
     // handle file change
     const handleImage = (e) => {
-        setImageFile(e.target.files[0])
-        
+        setImage(e.target.files[0])
     }
 
     useEffect(() => {
-        if (imageFile) {
+        if (image) {
             // upload image to cloud storage
-            console.log("ImageFile:", imageFile);
-            //upload the image to AWS and return a preview to user
-        }
-        findBook()
-    }, [imageFile, getBooksData])
+            (async () => {
+                const formData = new FormData();
+                formData.append('file', image);
+                const data = await UPLOAD_IMAGE(formData);
+                setImageName(data.fileName);
+                setImageUrl(data.publicUrl);
+            })()
+        } else {
+        // populate page with default books from Books API
+        findBook();
+    }
+    }, [image])
 
 
     const handleClick = (e) => {
-        if (e.target.className == "found_book" || e.target.className == "selected_found_book" || e.target.className == "found_book_cancel") {
+        if (e.target.className == styles.found_book || e.target.className == styles.selected_found_book || e.target.className == styles.found_book_cancel) {
             selectedDisplay.display === "none" ? setSelectedDisplay({ display: "flex" }) : setSelectedDisplay({ display: "none" });
-            if (imageDetails) deletePhotoAWS(imageDetails.image_key).then(setImageFile(null)) // delete photo from cloud storage
+            // if (imageDetails) deletePhotoAWS(imageDetails.image_key).then(setImageFile(null)) // delete photo from cloud storage
         }
     }
 
     const findBook = async (e) => {
-        const res = await GET_BOOK_GOOGLE(searchTitle, searchAuthor);
-        if (res.data.totalItems === 0) {
-            return setFoundBooks(<h1>Sorry, book not found</h1>)
-        }
-        const handleSelectBook = (e) => {
-            selectedDisplay.display === "none" ? setSelectedDisplay({ display: "flex" }) : setSelectedDisplay({ display: "none" });
+        // check if book is in database
+        let booksDB = await GET_BOOK_DB(searchTitle, searchAuthor);
+        booksDB = JSON.stringify(booksDB);
+        
+        if (booksDB.found_books) {
 
-            let selected = res.data.items[e.target.id].volumeInfo
-            setThumbnail(selected.imageLinks.thumbnail)
-            selected.title ? setTitle(selected.title) : setTitle(<input type="text" />);
-            selected.categories ? setGenre(selected.categories[0]) : setGenre(<input type="text" placeholder="Add genre" />);
-            selected.authors ? setAuthor(() => {
-                let author = ""
-
-                selected.authors.forEach((element, index) => {
-                    index == selected.authors.length - 1 ? author += element : author += `${element}, `;
-                });
-
-                return author
-            }) : setAuthor(<input type="text" placeholder="Add Author(s)" />);
-            if (selected.description) {
-                setDescription(selected.description.slice(0, 400) + ".....")
+        } else {
+            const res = await GET_BOOK_GOOGLE(searchTitle, searchAuthor);
+            if (res.data.totalItems === 0) {
+                return setFoundBooks(<h1>Sorry, book not found</h1>)
             }
-        }
+            const handleSelectBook = (e) => {
+                selectedDisplay.display === "none" ? setSelectedDisplay({ display: "flex" }) : setSelectedDisplay({ display: "none" });
 
-        setFoundBooks(
-            res.data.items.map((book, index) => {
-                if (!book.volumeInfo.imageLinks) {
-                    return //return a place holder thumbnail
+                let selected = res.data.items[e.target.id].volumeInfo
+                setThumbnail(selected.imageLinks.thumbnail)
+                selected.title ? setTitle(selected.title) : setTitle(<input type="text" />);
+                selected.categories ? setGenre(selected.categories[0]) : setGenre(<input type="text" placeholder="Add genre" />);
+                selected.authors ? setAuthor(() => {
+                    let author = ""
+
+                    selected.authors.forEach((element, index) => {
+                        index == selected.authors.length - 1 ? author += element : author += `${element}, `;
+                    });
+
+                    return author
+                }) : setAuthor(<input type="text" placeholder="Add Author(s)" />);
+                if (selected.description) {
+                    setDescription(selected.description.slice(0, 400) + ".....")
                 }
-                return (
-                    <img onClick={e => handleSelectBook(e)} className="found_book" id={index} key={index} src={book.volumeInfo.imageLinks.thumbnail} />
-                )
-            })
-        )
+            }
 
+            setFoundBooks(
+                res.data.items.map((book, index) => {
+                    if (!book.volumeInfo.imageLinks) {
+                        return // default for blank thumbnail
+                    }
+                    return (
+                        <img onClick={e => handleSelectBook(e)} className={styles.found_book} id={index} key={index} src={book.volumeInfo.imageLinks.thumbnail} />
+                    )
+                })
+            )
+        }
     }
     const handleFindBook = (e) => {
-        e.preventDefault()
-        findBook()
+        e.preventDefault();
+        findBook();
     }
     const dropHandler = (e) => {
         // prevent files from being opened: Default behaviour
@@ -131,13 +151,22 @@ export default function AddBook() {
     }
 
 
-    const handleUploadBook = (e) => {
-        // if book null add book
-
-        // if title and thumbnail in db update book owners list
-
-        // if not add book
-
+    const handleUploadBook = async (e) => {
+        const book_details = {
+            title: title,
+            author: author,
+            genre: genre,
+            author: author,
+            thumbnail_url: thumbnail,
+            owner_id: owner_id,
+            image_name: imageName,
+            image_url: imageUrl
+        }
+        await ADD_BOOK(book_details)
+            .then(()=> {
+                router.push('/available_books');
+            })
+        
     }
 
     return (
@@ -163,7 +192,7 @@ export default function AddBook() {
                             />
                             <button>Find</button>
                         </form>
-                        <div className="found_books">
+                        <div className={styles.found_books}>
                             {foundBooks}
                         </div>
 
@@ -182,11 +211,13 @@ export default function AddBook() {
                                     <img className={styles.selected_book_image} src={thumbnail} />
 
                                     <div onDrop={e => dropHandler(e)} onDragOver={e => dragOverHandler(e)} className={styles.drop_zone}>
-                                        {imageDetails && <img src={imageDetails.image_url} alt="book image" />}
-                                        {!imageDetails &&
+                                        {imageUrl && <img src={imageUrl} alt="book image" />}
+                                        {!imageName &&
                                             <div className={styles.drop_zone_details}>
                                                 <p>Add Picture of Your book</p>
-                                                <input onChange={handleImage} name="file" type="file" />
+                                                <form encType='multipart/form-data'>
+                                                    <input type='file' name='file' onChange={handleImage} />
+                                                </form>
                                                 <p className={styles.drag_option}>Or drag and drop</p>
                                             </div>}
                                     </div>
@@ -208,7 +239,7 @@ export default function AddBook() {
                     selectedBook && <BookDetails handleSelectedBook={handleSelectedBook} selectedBook={selectedBook} />
                 }
                 <div className={styles.add_book_aside}>
-                    <AsideBooks handleSelectedBook={handleSelectedBook} getBooksData={getBooksData} />
+                    <AsideBooks handleSelectedBook={handleSelectedBook} /*getBooksData={getBooksData}*/ />
                 </div>
 
                 <form style={{ display: "none" }}>

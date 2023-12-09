@@ -31,19 +31,19 @@ export default function NavigationBar() {
     return (
         <div className={styles.Books_navigation}>
             <nav>
-                <Link className={styles.selected} href={`/${localUser}/books`} >
+                <Link className={styles.selected} href={`/available_books`} >
                     <HomeOutlinedIcon className={styles.Navigation_icon} /> <span>Home</span>
                 </Link>
-                <Link href={`/${localUser}/profile`} >
+                <Link href={`/profile`} >
                     <SentimentSatisfiedAltOutlinedIcon className={styles.Navigation_icon} /> <span>Profile</span>
                 </Link>
-                <Link href={`/${localUser}/addbook`} >
+                <Link href={`/add_book`} >
                     <AddCircleOutlineOutlinedIcon className={styles.Navigation_icon} /> <span>Add</span>
                 </Link>
-                <Link href={`/${localUser}/books`} >
+                <Link href={`/ebooks`} >
                     <MenuBookOutlinedIcon className={styles.Navigation_icon} /> <span>eBooks</span>
                 </Link>
-                <Link href={`/${localUser}/books`} >
+                <Link href={`/available_books`} >
                     <ChatBubbleOutlineOutlinedIcon className={styles.Navigation_icon} /> <span>Chat</span>
                 </Link>
                 <Link onClick={handleLogout} href={`/`} >
