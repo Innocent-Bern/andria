@@ -12,6 +12,8 @@ const storage = new Storage({
     keyFilename: `./gcp_private_key.json`,
 });
 
+const fs = require('fs')
+const { promisify } = require('util')
 
 // create session token
 const createToken = (_id) => {
@@ -76,28 +78,29 @@ const upload_image = async (req, res) => {
      */
     const myBucket = storage.bucket('andria_user_book_images');
 
+
     myBucket.upload(
         req.file.path,
         {
             destinatin: 'andria_user_book_images/'
         },
-        (err, file) => {
+        async (err, file) => {
             if (err) {
-                // console.error(`Error uploading: ${err}`);
+                console.error(`Error uploading: ${err}`);
                 res.status(400).json({ error: "Couldn't upload image" })
             } else {
                 // Make the file public
                 file.makePublic(async function (err) {
                     if (err) {
-                        console.error(`Error making file public: ${err}`)
                         res.status(400).json({ error: "Couldn't make image public" })
                     } else {
-                        console.log(`File ${file.name} is now public.`)
-                        const publicUrl = file.publicUrl()
-                        console.log(`Public URL for ${file.name}: ${publicUrl}`)
+                        const publicUrl = file.publicUrl();
                         res.status(200).json(publicUrl);
                     }
                 })
+                // handle file deletion after upload
+                const unlinkAsync = promisify(fs.unlink);
+                await unlinkAsync(req.file.path);
             }
         })
 }
