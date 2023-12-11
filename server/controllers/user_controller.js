@@ -72,25 +72,29 @@ const find_book_db = async (req, res) => {
 // Add new book 
 const add_new_book = async (req, res) => {
     const { title, author, genre, thumbnail_url, owner_id } = req.body;
-    
+
     try {
         await upload_book_image(req.file.path)
-            .then( async (response) => {
-                    if (response.error) {
-                        res.status(400).json({ error: response.error })
-                    } else {
-                        const image_name = response.fileName;
-                        const image_url = response.publicUrl;
-                        const added_book = await Book.create({ title, author, genre, thumbnail_url, book_owners: [{ _id: owner_id, image_name, image_url }] });
-                        res.status(200).json({ added_book });
-                    }
+            .then(async (response) => {
+                // delete image from local storage
+                await unlinkAsync(req.file.path);
+
+                if (response.error) {
+                    res.status(400).json({ error: response.error })
+                } else {
+                    const image_name = response.fileName;
+                    const image_url = response.publicUrl;
+                    const added_book = await Book.create({ title, author, genre, thumbnail_url, book_owners: [{ _id: owner_id, image_name, image_url }] });
+                    res.status(200).json({ added_book });
                 }
+            }
             )
     } catch (error) {
+        // delete image from local storage
+        await unlinkAsync(req.file.path);
         res.status(400).json({ error: error.message })
     }
-    // delete image from local storage
-    await unlinkAsync(req.file.path);
+
 }
 
 // Add new copy of an available book
