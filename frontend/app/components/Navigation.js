@@ -14,18 +14,14 @@ import styles from "../page.module.css"
 
 export default function NavigationBar() {
     let router = useRouter();
-    let localUser;
     const { dispatch } = useAuthContext();
-
-    if (typeof window !== "undefined") {
-        localUser = JSON.parse(localStorage.getItem("user"));
-    }
 
     const handleLogout = () => {
 
         dispatch({ type: "LOGOUT" })
 
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
         router.push("/");
     }
     return (

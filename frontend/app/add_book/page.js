@@ -27,7 +27,8 @@ export default function AddBook() {
     const [searchAuthor, setSearchAuthor] = useState("")
     const [previewSrc, setPreviewSrc] = useState(null);
 
-
+    //properties of book to be added
+    const [book_id, setBook_id] = useState(null)
     const [title, setTitle] = useState("")
     const [genre, setGenre] = useState("")
     const [author, setAuthor] = useState("")
@@ -37,6 +38,7 @@ export default function AddBook() {
 
     const [foundBooks, setFoundBooks] = useState()
     const [selectedDisplay, setSelectedDisplay] = useState({ display: "none" })
+    const [newBook, setNewBook] = useState(true);
 
     useEffect(() => {
         // populate page with default books from Books API
@@ -49,6 +51,7 @@ export default function AddBook() {
             selectedDisplay.display === "none" ? setSelectedDisplay({ display: "flex" }) : setSelectedDisplay({ display: "none" });
             setPreviewSrc(null);
             setImage(null);
+            setNewBook(true);
         }
     }
 
@@ -57,17 +60,17 @@ export default function AddBook() {
         const booksDB = await GET_BOOK_DB(searchTitle, searchAuthor);
 
         if (booksDB.found_books.length > 0) {
-            // display found_books
+            setNewBook(false);
             let found_books = booksDB.found_books;
             const handleSelectBook = (e) => {
                 selectedDisplay.display === "none" ? setSelectedDisplay({ display: "flex" }) : setSelectedDisplay({ display: "none" });
 
                 let selected = found_books[e.target.id]
-                console.log(`Target: ${JSON.stringify(selected)}`);
                 setThumbnail(selected.thumbnail_url);
                 setTitle(selected.title);
                 setGenre(selected.genre);
                 setAuthor(selected.author);
+                setBook_id(selected._id);
             }
             setFoundBooks(
                 booksDB.found_books.map((book, index) => {
@@ -124,28 +127,49 @@ export default function AddBook() {
 
     const handleUploadBook = async (e) => {
         const formData = new FormData();
-        formData.append('title', title);
-        formData.append('author', author);
-        formData.append('genre', genre);
+
         formData.append('owner_id', owner_id);
-        formData.append('thumbnail_url', thumbnail)
         formData.append('file', image);
 
-        const response = new Promise((resolve) => {
-            const res = ADD_BOOK(formData)
-            if (res) {
-                resolve(res);
-            }
-        })
-        await response.then((res) => {
-            if (res.error) {
-                // console.log(res.error);
-                alert("Upload failed. Try again");
-            } else {
-                alert("Book added successfully");
-                router.push('/available_books');
-            }
-        })
+        if (newBook) {
+            formData.append('title', title);
+            formData.append('author', author);
+            formData.append('genre', genre);
+            formData.append('thumbnail_url', thumbnail);
+
+            const response = new Promise((resolve) => {
+                const res = ADD_BOOK(formData)
+                if (res) {
+                    resolve(res);
+                }
+            })
+            await response.then((res) => {
+                if (res.error) {
+                    // console.log(res.error);
+                    alert("Upload failed. Try again");
+                } else {
+                    alert("Book added successfully");
+                    router.push('/available_books');
+                }
+            })
+        } else {
+            formData.append('book_id', book_id);
+            const response = new Promise((resolve) => {
+                const res = UPDATE_BOOK_OWNERS(formData)
+                if (res) {
+                    resolve(res);
+                }
+            })
+            await response.then((res) => {
+                if (res.error) {
+                    // console.log(res.error);
+                    alert("Upload failed. Try again");
+                } else {
+                    alert("Book added successfully");
+                    router.push('/available_books');
+                }
+            })
+        }
 
 
     }
@@ -202,7 +226,7 @@ export default function AddBook() {
                                     <p className={styles.selected_author}> <span>Book Author:</span> {author} </p>
                                     <p className={styles.selected_genre}> <span>Book Genre:</span> {genre} </p>
                                     {
-                                        description && 
+                                        description &&
                                         <p className={styles.selected_description}> <span>Book Description:</span> {description} </p>
                                     }
                                 </div>

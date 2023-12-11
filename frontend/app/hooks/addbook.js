@@ -36,16 +36,15 @@ export async function ADD_BOOK(formData) {
     return data;
 }
 
-export async function UPDATE_BOOK_OWNERS(book_id, owner_details) {
+export async function UPDATE_BOOK_OWNERS(formData) {
     // Handles users adding a new book
-    const res = await fetch(`${backend_uri}/update_book_owners`, {
+    const res = await fetch(`${backend_uri}/add_new_copy`, {
         method: "POST",
         mode: "cors",
         headers: {
-            'Content-Type': 'application/json',
             "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ book_id, owner_details })
+        body: formData
     });
     const data = await res.json();
     return data;

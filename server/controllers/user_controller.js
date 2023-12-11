@@ -99,24 +99,27 @@ const add_new_book = async (req, res) => {
 
 // Add new copy of an available book
 const add_new_copy = async (req, res) => {
-    const { book_id, owner_details } = req.body;
-    const image_file = req.file.path;
+    const { book_id, owner_id } = req.body;
 
     try {
-        const image_data = await upload_book_image(image_file);
-        if (image_data.error) {
-            res.status(400).json({ error: image_data.error })
-        } else {
-            const image_name = image_data.fileName;
-            const image_url = image_data.publicUrl;
-            const added_copy = await Book.findByIdAndUpdate({ _id: book_id }, { $push: { book_owners: { _id: owner_details._id, image_name, image_url } } }, { new: true });
-            res.status(200).json({ added_copy });
-        }
+        await upload_book_image(req.file.path)
+        .then(async (response) => {
+            // delete image from local storage
+            await unlinkAsync(req.file.path);
+            if (response.error) {
+                res.status(400).json({ error: image_data.error })
+            } else {
+                const image_name = response.fileName;
+                const image_url = response.publicUrl;
+                const added_copy = await Book.findByIdAndUpdate({ _id: book_id }, { $push: { book_owners: { _id: owner_id, image_name, image_url } } }, { new: true });
+                res.status(200).json({ added_copy });
+            }
+        })
     } catch (error) {
+        // delete image from local storage
+        await unlinkAsync(req.file.path);
         res.status(400).json({ error: error.message });
     }
-    // delete image from local storage
-    await unlinkAsync(image_file);
 
 }
 
