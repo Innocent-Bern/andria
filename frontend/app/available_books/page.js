@@ -15,18 +15,18 @@ export default function AvailableBooks() {
     const [books, setBooks] = useState(null);
     const [selectedBook, setSelectedBook] = useState(null)
 
-    /*const handleBookSearch = (e) => {
-        e.preventDefault()
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${searchTitle}&key=AIzaSyDk1A-SkL-BV4f0a3Lzs8HiN7LZYDIVJwU`)
-            .then(res => console.log(res.data))
-            .catch(err => console.log(err))
-    }*/
-    useEffect(()=>{
-        (async()=>{
-            // Get available books from the db
-            const data = await GET_BOOKS_DB();
-            setBooks(JSON.stringify(data));
-        })()
+    const handleBookSearch = async (e) => {
+        e.preventDefault();
+        // Search for book in the db
+    }
+    useEffect(() => {
+        if (!books) {
+            (async () => {
+                // Get available books from the db
+                const data = await GET_BOOKS_DB();
+                setBooks(data.available_books);
+            })()
+        }
     }, [books])
 
     const handleSelectedBook = (book) => {
@@ -43,14 +43,14 @@ export default function AvailableBooks() {
                         <>
                             <header className={styles.available_books_header}>
                                 <h1>Available Books</h1>
-                                <form className={styles.search} /*onSubmit={handleBookSearch}*/>
+                                <form className={styles.search} onSubmit={handleBookSearch}>
                                     <input
                                         type="text"
                                         onChange={e => setSearchTitle(e.target.value)}
                                         value={searchTitle}
                                         placeholder='search'
                                     />
-                                    <div /*onClick={handleBookSearch}*/ className={styles.search_icon}>
+                                    <div onClick={handleBookSearch} className={styles.search_icon}>
                                         <SearchIcon />
                                     </div>
                                 </form>
@@ -62,11 +62,11 @@ export default function AvailableBooks() {
                                 </div>
 
                                 <div className={styles.books_container}>
-                                    {/*books &&
-                                        books.available_books.map((book, index) => {
+                                    {books &&
+                                        books.map((book, index) => {
                                             return <img onClick={e => handleSelectedBook(book)} className={styles.found_book} src={book.thumbnail_url} key={index} alt="book cover thumbnail" />
                                         })
-                                    */}
+                                    }
                                 </div>
                             </div>
                         </>
@@ -76,7 +76,7 @@ export default function AvailableBooks() {
                     selectedBook && <BookDetails handleSelectedBook={handleSelectedBook} selectedBook={selectedBook} />
                 }
                 <div className={styles.side_books}>
-                    <AsideBooks handleSelectedBook={handleSelectedBook} /*getBooksData={books}*/ />
+                    <AsideBooks handleSelectedBook={handleSelectedBook} books={books} />
                 </div>
             </div>
         </Dashboard>

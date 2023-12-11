@@ -1,16 +1,19 @@
 'use client'
 
-import Dashboard from '../components/Dashboard';
-import AsideBooks from '../components/AsideBooks';
-import BookDetails from '../components/BookDetails';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import styles from '../page.module.css'
+
+import Dashboard from '../components/Dashboard';
+import AsideBooks from '../components/AsideBooks';
+import BookDetails from '../components/BookDetails';
+import PreviewBookImage from '../components/PreviewBookImage';
+
 import { GET_BOOK_GOOGLE, GET_BOOK_DB } from '../hooks/getbooks';
-import { UPLOAD_IMAGE, ADD_BOOK } from '../hooks/addbook';
+import { ADD_BOOK, UPDATE_BOOK_OWNERS } from '../hooks/addbook';
 
 export default function AddBook() {
     const router = useRouter();
@@ -20,69 +23,65 @@ export default function AddBook() {
         owner_id = JSON.parse(localStorage.getItem("user"));
     }
 
-    /*----------------------------handle aside books-------------------------------------------------*/
-    // const { loading, error, data: getBooksData } = useQuery(GET_BOOKS);
-    const [selectedBook, setSelectedBook] = useState(null)
-    const handleSelectedBook = (book) => {
-        book ? setSelectedBook(book) : !selectedBook ? setSelectedBook(book) : setSelectedBook(null)
-    }
-    /*-----------------------------------------------------------------------------*/
-
     const [searchTitle, setSearchTitle] = useState("")
     const [searchAuthor, setSearchAuthor] = useState("")
+    const [previewSrc, setPreviewSrc] = useState(null);
+
 
     const [title, setTitle] = useState("")
     const [genre, setGenre] = useState("")
     const [author, setAuthor] = useState("")
     const [description, setDescription] = useState("")
     const [image, setImage] = useState(null)
-    const [imageName, setImageName] = useState(null)
-    const [imageUrl, setImageUrl] = useState(null)
     const [thumbnail, setThumbnail] = useState(null)
 
     const [foundBooks, setFoundBooks] = useState()
     const [selectedDisplay, setSelectedDisplay] = useState({ display: "none" })
 
-
-    // handle file change
-    const handleImage = (e) => {
-        setImage(e.target.files[0])
-    }
-
     useEffect(() => {
-        if (image) {
-            // upload image to cloud storage
-            (async () => {
-                const formData = new FormData();
-                formData.append('file', image);
-                const data = await UPLOAD_IMAGE(formData);
-                setImageName(data.fileName);
-                setImageUrl(data.publicUrl);
-            })()
-        } else {
         // populate page with default books from Books API
         findBook();
-    }
-    }, [image])
+    }, [])
 
 
-    const handleClick = (e) => {
+    const toggleSelectedDisplay = (e) => {
         if (e.target.className == styles.found_book || e.target.className == styles.selected_found_book || e.target.className == styles.found_book_cancel) {
             selectedDisplay.display === "none" ? setSelectedDisplay({ display: "flex" }) : setSelectedDisplay({ display: "none" });
-            // if (imageDetails) deletePhotoAWS(imageDetails.image_key).then(setImageFile(null)) // delete photo from cloud storage
+            setPreviewSrc(null);
+            setImage(null);
         }
     }
 
     const findBook = async (e) => {
         // check if book is in database
-        let booksDB = await GET_BOOK_DB(searchTitle, searchAuthor);
-        booksDB = JSON.stringify(booksDB);
-        
-        if (booksDB.found_books) {
+        const booksDB = await GET_BOOK_DB(searchTitle, searchAuthor);
 
+        if (booksDB.found_books.length > 0) {
+            // display found_books
+            let found_books = booksDB.found_books;
+            const handleSelectBook = (e) => {
+                selectedDisplay.display === "none" ? setSelectedDisplay({ display: "flex" }) : setSelectedDisplay({ display: "none" });
+
+                let selected = found_books[e.target.id]
+                console.log(`Target: ${JSON.stringify(selected)}`);
+                setThumbnail(selected.thumbnail_url);
+                setTitle(selected.title);
+                setGenre(selected.genre);
+                setAuthor(selected.author);
+            }
+            setFoundBooks(
+                booksDB.found_books.map((book, index) => {
+                    return (
+                        <img onClick={e => handleSelectBook(e)} className={styles.found_book} id={index} key={index} src={book.thumbnail_url} />
+                    )
+                })
+            )
         } else {
+            // Get details from google books API
             const res = await GET_BOOK_GOOGLE(searchTitle, searchAuthor);
+
             if (res.data.totalItems === 0) {
+                // update later to display form requiring manual entry of book details
                 return setFoundBooks(<h1>Sorry, book not found</h1>)
             }
             const handleSelectBook = (e) => {
@@ -122,53 +121,40 @@ export default function AddBook() {
         e.preventDefault();
         findBook();
     }
-    const dropHandler = (e) => {
-        // prevent files from being opened: Default behaviour
-        e.preventDefault()
-
-        // ensure user uploads a single file
-        if (e.dataTransfer.items.length > 1) {
-            return alert("Upload a single photo")
-        }
-
-        // check if it's a file 
-        if (e.dataTransfer.items[0].kind !== "file") {
-            return alert("Upload an image file")
-        }
-
-        // check if it's a jpeg or png file
-        let uploadedFile = e.dataTransfer.items[0].getAsFile()
-        const fileType = uploadedFile["type"]
-        const validImageTypes = ['image/jpeg', 'image/png'];
-        if (!validImageTypes.includes(fileType)) {
-            return alert("Upload a JPEG or PNG file")
-        }
-    }
-
-    const dragOverHandler = (e) => {
-        // prevent files from being opened: Default behaviour
-        e.preventDefault()
-    }
-
 
     const handleUploadBook = async (e) => {
-        const book_details = {
-            title: title,
-            author: author,
-            genre: genre,
-            author: author,
-            thumbnail_url: thumbnail,
-            owner_id: owner_id,
-            image_name: imageName,
-            image_url: imageUrl
-        }
-        await ADD_BOOK(book_details)
-            .then(()=> {
-                router.push('/available_books');
-            })
-        
-    }
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('author', author);
+        formData.append('genre', genre);
+        formData.append('owner_id', owner_id);
+        formData.append('thumbnail_url', thumbnail)
+        formData.append('file', image);
 
+        const response = new Promise((resolve) => {
+            const res = ADD_BOOK(formData)
+            if (res) {
+                resolve(res);
+            }
+        })
+        await response.then((res) => {
+            if (res.error) {
+                // console.log(res.error);
+                alert("Upload failed. Try again");
+            } else {
+                alert("Book added successfully");
+                router.push('/available_books');
+            }
+        })
+
+
+    }
+    /*----------------------------handle aside books-------------------------------------------------*/
+    const [selectedBook, setSelectedBook] = useState(null)
+    const handleSelectedBook = (book) => {
+        book ? setSelectedBook(book) : !selectedBook ? setSelectedBook(book) : setSelectedBook(null)
+    }
+    /*-----------------------------------------------------------------------------*/
     return (
         <Dashboard >
             <div className={styles.Add_book}>
@@ -196,41 +182,34 @@ export default function AddBook() {
                             {foundBooks}
                         </div>
 
-                        <div onClick={e => handleClick(e)} style={selectedDisplay} className={styles.selected_found_book}>
+                        <div onClick={e => toggleSelectedDisplay(e)} style={selectedDisplay} className={styles.selected_found_book}>
 
                             <div style={selectedDisplay} className={styles.found_book_details}>
                                 <div className={styles.found_booK_controll}>
                                     <h2>Book Details</h2>
-                                    <div onClick={e => handleClick(e)} className={styles.found_book_cancel}>
+                                    <div onClick={e => toggleSelectedDisplay(e)} className={styles.found_book_cancel}>
                                         Cancel
                                         <ClearOutlinedIcon />
                                     </div>
                                 </div>
                                 <div className={styles.selected_found_book_images}>
-
                                     <img className={styles.selected_book_image} src={thumbnail} />
-
-                                    <div onDrop={e => dropHandler(e)} onDragOver={e => dragOverHandler(e)} className={styles.drop_zone}>
-                                        {imageUrl && <img src={imageUrl} alt="book image" />}
-                                        {!imageName &&
-                                            <div className={styles.drop_zone_details}>
-                                                <p>Add Picture of Your book</p>
-                                                <form encType='multipart/form-data'>
-                                                    <input type='file' name='file' onChange={handleImage} />
-                                                </form>
-                                                <p className={styles.drag_option}>Or drag and drop</p>
-                                            </div>}
-                                    </div>
-
+                                    <PreviewBookImage previewSrc={previewSrc} setPreviewSrc={setPreviewSrc} setImage={setImage} />
                                 </div>
 
                                 <div className={styles.selected_found_book_details}>
                                     <p className={styles.selected_title}> <span>Book Title:</span> {title} </p>
                                     <p className={styles.selected_author}> <span>Book Author:</span> {author} </p>
                                     <p className={styles.selected_genre}> <span>Book Genre:</span> {genre} </p>
-                                    {description && <p className={styles.selected_description}> <span>Book Description:</span> {description} </p>}
+                                    {
+                                        description && 
+                                        <p className={styles.selected_description}> <span>Book Description:</span> {description} </p>
+                                    }
                                 </div>
-                                <div onClick={handleUploadBook} className={styles.add_selected_book_btn}>Add Book</div>
+                                {
+                                    image &&
+                                    <div onClick={handleUploadBook} className={styles.add_selected_book_btn}>Add Book</div>
+                                }
                             </div>
                         </div>
                     </>
@@ -266,7 +245,7 @@ export default function AddBook() {
                     />
 
                     <label >Image file</label>
-                    <input type="file" name="file" onChange={handleImage} />
+                    <input type="file" name="file" /*onChange={handleImage} */ />
 
                     <button type="submit">Submit</button>
                 </form>

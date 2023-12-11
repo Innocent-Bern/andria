@@ -1,19 +1,16 @@
 require("dotenv").config()
-const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user_model");
-const Book = require("../models/book_model");
-
-
 const axios = require("axios");
 
-const { Storage } = require('@google-cloud/storage');
-const storage = new Storage({
-    keyFilename: `./gcp_private_key.json`,
-});
+const mongoose = require("mongoose");
+const User = require("../models/user_model");
+const Book = require("../models/book_model");
+const { upload_book_image } = require("../cloud/uploadImage");
 
 const fs = require('fs')
 const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink);
+
 
 // create session token
 const createToken = (_id) => {
@@ -63,74 +60,60 @@ const google_book_search = async (req, res) => { }
 
 // find specific book from db
 const find_book_db = async (req, res) => {
-    const { title, author } = req.body;
+    const { title } = req.body;
     try {
-        const found_books = await Book.find({ title: title, author: author });
+        const found_books = await Book.find({ title: title });
         res.status(200).json({ found_books })
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
 
-// upload users book image to gcp
-const upload_image = async (req, res) => {
-    /**
-     * Resource used: https://dev.to/kamalhossain/upload-file-to-google-cloud-storage-from-nodejs-server-5cdg
-     */
-    const myBucket = storage.bucket('andria_user_book_images');
-
-    // handle file deletion after upload
-    const unlinkAsync = promisify(fs.unlink);
-
-    myBucket.upload(
-        req.file.path,
-        {
-            destinatin: 'andria_user_book_images/'
-        },
-        async (err, file) => {
-            if (err) {
-                console.error(`Error uploading: ${err}`);
-                res.status(400).json({ error: "Couldn't upload image" })
-
-                // delete file
-                await unlinkAsync(req.file.path);
-            } else {
-                // Make the file public
-                file.makePublic(async function (err) {
-                    if (err) {
-                        res.status(400).json({ error: "Couldn't make image public" })
-                    } else {
-                        const publicUrl = file.publicUrl();
-                        const fileName = file.name;
-                        res.status(200).json({ publicUrl, fileName });
-                    }
-                })
-                // delete file
-                await unlinkAsync(req.file.path);
-            }
-        })
-}
-
 // Add new book 
 const add_new_book = async (req, res) => {
-    const { title, author, genre, thumbnail_url, image_name, image_url, owner_id } = req.body;
+    const { title, author, genre, thumbnail_url, owner_id } = req.body;
+    
     try {
-        const added_book = await Book.create({title, author, genre, thumbnail_url, book_owners: [{_id: owner_id, image_name, image_url}]});
-        res.status(200).json({ added_book });
+        await upload_book_image(req.file.path)
+            .then( async (response) => {
+                    if (response.error) {
+                        res.status(400).json({ error: response.error })
+                    } else {
+                        const image_name = response.fileName;
+                        const image_url = response.publicUrl;
+                        const added_book = await Book.create({ title, author, genre, thumbnail_url, book_owners: [{ _id: owner_id, image_name, image_url }] });
+                        res.status(200).json({ added_book });
+                    }
+                }
+            )
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
+    // delete image from local storage
+    await unlinkAsync(req.file.path);
 }
 
 // Add new copy of an available book
 const add_new_copy = async (req, res) => {
     const { book_id, owner_details } = req.body;
+    const image_file = req.file.path;
+
     try {
-        const added_copy = await Book.findByIdAndUpdate({ _id: book_id }, { $push: { book_owners: owner_details } }, { new: true });
-        res.status(200).json({ added_copy });
+        const image_data = await upload_book_image(image_file);
+        if (image_data.error) {
+            res.status(400).json({ error: image_data.error })
+        } else {
+            const image_name = image_data.fileName;
+            const image_url = image_data.publicUrl;
+            const added_copy = await Book.findByIdAndUpdate({ _id: book_id }, { $push: { book_owners: { _id: owner_details._id, image_name, image_url } } }, { new: true });
+            res.status(200).json({ added_copy });
+        }
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
+    // delete image from local storage
+    await unlinkAsync(image_file);
+
 }
 
 // get book from google books api
@@ -149,5 +132,5 @@ const get_book_google = async (req, res) => {
 
 module.exports = {
     user_sign_up, user_login, available_books, google_book_search, find_book_db,
-    add_new_copy, get_book_google, upload_image, add_new_book
+    add_new_copy, get_book_google, add_new_book
 };

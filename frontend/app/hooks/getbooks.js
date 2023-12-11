@@ -55,21 +55,5 @@ export async function GET_BOOK_GOOGLE(title, author) {
         body: JSON.stringify({ title, author })
     });
     const data = await res.json();
-    console.log(data);
     return data;
-}
-
-export async function GETBOOKGOOGLE(title, author) {
-    // fetches available books from google books api
-    const res = await fetch(`${backend_uri}/${user}/get_book_google`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ title, author })
-    });
-    const data = await res.json();
-    console.log(data)
 }
