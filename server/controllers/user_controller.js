@@ -72,7 +72,6 @@ const find_book_db = async (req, res) => {
 // Add new book 
 const add_new_book = async (req, res) => {
     const { title, author, genre, thumbnail_url, owner_id } = req.body;
-
     try {
         await upload_book_image(req.file.path)
             .then(async (response) => {
@@ -91,7 +90,7 @@ const add_new_book = async (req, res) => {
             )
     } catch (error) {
         // delete image from local storage
-        await unlinkAsync(req.file.path);
+        // await unlinkAsync(req.file.path);
         res.status(400).json({ error: error.message })
     }
 

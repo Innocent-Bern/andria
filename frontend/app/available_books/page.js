@@ -58,7 +58,7 @@ export default function AvailableBooks() {
 
                             <div className={styles.display_books}>
                                 <div className={styles.available_genres}>
-                                    <div className={styles.genre}>Fantasy</div>
+                                    <div className={styles.genre}>ALL</div>
                                 </div>
 
                                 <div className={styles.books_container}>

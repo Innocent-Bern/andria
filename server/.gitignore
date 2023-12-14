@@ -1,3 +1,8 @@
+#test files
+test.sh 
+test.jpeg 
+result.txt
+
 # gcp private key
 gcp_private_key.json
 
