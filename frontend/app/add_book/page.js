@@ -205,7 +205,6 @@ export default function AddBook() {
                         <div className={styles.found_books}>
                             {foundBooks}
                         </div>
-
                         <div onClick={e => toggleSelectedDisplay(e)} style={selectedDisplay} className={styles.selected_found_book}>
 
                             <div style={selectedDisplay} className={styles.found_book_details}>
