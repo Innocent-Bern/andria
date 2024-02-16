@@ -7,13 +7,13 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 
 import styles from '../page.module.css'
 
-import Dashboard from '../components/Dashboard';
-import AsideBooks from '../components/AsideBooks';
-import BookDetails from '../components/BookDetails';
-import PreviewBookImage from '../components/PreviewBookImage';
+import Dashboard from '../_components/Dashboard';
+import AsideBooks from '../_components/AsideBooks';
+import BookDetails from '../_components/BookDetails';
+import PreviewBookImage from '../_components/PreviewBookImage';
 
-import { GET_BOOK_GOOGLE, GET_BOOK_DB } from '../hooks/getbooks';
-import { ADD_BOOK, UPDATE_BOOK_OWNERS } from '../hooks/addbook';
+import { GET_BOOK_GOOGLE, GET_BOOK_DB } from '../_hooks/getbooks';
+import { ADD_BOOK, UPDATE_BOOK_OWNERS } from '../_hooks/addbook';
 
 export default function AddBook() {
     const router = useRouter();

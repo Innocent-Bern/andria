@@ -1,37 +1,42 @@
 'use client'
 
-import Dashboard from '../components/Dashboard';
-import BookDetails from '../components/BookDetails';
-import AsideBooks from '../components/AsideBooks';
+import Dashboard from '../_components/Dashboard';
+import BookDetails from '../_components/BookDetails';
+import AsideBooks from '../_components/AsideBooks';
 import styles from '../page.module.css'
-import { GET_BOOKS_DB } from '../hooks/getbooks';
+import { GET_BOOKS_DB } from '../_hooks/getbooks';
 
 import SearchIcon from '@mui/icons-material/Search';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function AvailableBooks() {
     const [searchTitle, setSearchTitle] = useState("")
-    const [books, setBooks] = useState(null);
+    const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(null)
+    const router = useRouter();
 
     const handleBookSearch = async (e) => {
         e.preventDefault();
         // Search for book in the db
     }
     useEffect(() => {
-        if (!books) {
-            (async () => {
-                // Get available books from the db
-                const data = await GET_BOOKS_DB();
-                setBooks(data.available_books);
-            })()
-        }
-    }, [books])
-
+        (async () => {
+            // Get available books from the db
+            const data = await GET_BOOKS_DB();
+            setBooks(data.available_books);
+        })()
+        console.log("I run once");
+    }, [])
+    
     const handleSelectedBook = (book) => {
         // toggle view when a books is selected
-        book ? setSelectedBook(book) : !selectedBook ? setSelectedBook(book) : setSelectedBook(null)
+        // book ? setSelectedBook(book) : !selectedBook ? setSelectedBook(book) : setSelectedBook(null)
+        // add book to local storage
+        setSelectedBook(book)
+        localStorage.setItem("selectedBook", JSON.stringify(book))
+        router.push(`/available_books/${book._id}`)
     }
 
     return (

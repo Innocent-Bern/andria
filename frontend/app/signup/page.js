@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import styles from '../page.module.css'
-import { SIGNUP } from '../hooks/userauth'
-import { useAuthContext } from '../hooks/useAuthContext'
+import { SIGNUP } from '../_hooks/userauth'
+import { useAuthContext } from '../_hooks/useAuthContext'
 import { useRouter } from 'next/navigation'
 
 export default function Signup() {

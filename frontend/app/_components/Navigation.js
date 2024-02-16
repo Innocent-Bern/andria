@@ -9,7 +9,7 @@ import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useAuthContext } from '../_hooks/useAuthContext';
 import styles from "../page.module.css"
 
 export default function NavigationBar() {
@@ -22,6 +22,7 @@ export default function NavigationBar() {
 
         localStorage.removeItem("user");
         localStorage.removeItem("token");
+        localStorage.removeItem("selectedBook");
         router.push("/");
     }
     return (

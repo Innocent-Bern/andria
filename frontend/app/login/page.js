@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import styles from "../page.module.css"
-import { LOGIN } from "../hooks/userauth";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { LOGIN } from "../_hooks/userauth";
+import { useAuthContext } from "../_hooks/useAuthContext";
 import { useRouter } from "next/navigation";
 
 export default function Login() {

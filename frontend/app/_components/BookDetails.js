@@ -3,7 +3,7 @@
 import styles from "../page.module.css"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
-import { GET_USER } from "../hooks/userdetails";
+import { GET_USER } from "../_hooks/userdetails";
 
 export default function BookDetails({ selectedBook, handleSelectedBook }) {
     const router = useRouter();
