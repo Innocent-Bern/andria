@@ -1,4 +1,4 @@
-const backend_uri = "http://localhost:8080/api";
+const backend_uri = "https://andria-backend-lnrz2crrda-uc.a.run.app/api";
 
 let token;
 let  user;
