@@ -1,7 +1,5 @@
 const { Storage } = require('@google-cloud/storage');
-const storage = new Storage({
-    keyFilename: `./gcp_private_key.json`,
-});
+const storage = new Storage();
 
 const upload_book_image = async (image_file) => {
     // Resource used: https://dev.to/kamalhossain/upload-file-to-google-cloud-storage-from-nodejs-server-5cdg
