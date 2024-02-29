@@ -10,16 +10,39 @@ export default function Signup() {
     // User sign up page
     const { dispatch } = useAuthContext();
     const [email, setEmail] = useState("")
+    const [loading, setLoading] = useState(false)
     const [password, setPassword] = useState("")
+    const [error, setError] = useState(null)
     const router = useRouter();
 
 
     const handleSubmit = async (e) => {
         // Handle form submission
+        setLoading(true);
+        setError(null);
         e.preventDefault()
-        const user = await SIGNUP(email, password)
-        dispatch({ type: "LOGIN", payload: user })
-        router.push('/available_books');
+        await SIGNUP(email, password)
+            .then((data) => {
+                if (data.error) {
+                    setError(data.error);
+                } else {
+                    const user = data.user_id;
+                    const token = data.token;
+
+                    // Add user to local storage
+                    localStorage.setItem("user", JSON.stringify(user));
+                    localStorage.setItem("token", JSON.stringify(token));
+
+                    dispatch({ type: "LOGIN", payload: user })
+
+                    // Redirect to available books page
+                    router.push('/available_books')
+                }
+                setLoading(false);
+            }).catch(err => {
+                setError("An error occurred. Please try again.");
+                setLoading(false);
+            })
     }
     return (
         <main className={styles.Signup}>
@@ -41,7 +64,10 @@ export default function Signup() {
                     placeholder="Password"
                     required
                 />
-                <button type="submit">Submit</button>
+                {error && <p className={styles.sign_error}>{error}</p>}
+                {loading ?
+                    <button type="submit" disabled>Sign Up</button> :
+                    <button type="submit">Sign up</button>}
             </form>
         </main>
     )
