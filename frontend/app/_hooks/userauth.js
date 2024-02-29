@@ -26,12 +26,5 @@ export async function LOGIN(email, password) {
 
   const data = await res.json()
   
-  // Add user to local storage
-  const user_id = data.user_id;
-  const token = data.token;
-  localStorage.setItem("user", JSON.stringify(user_id));
-  localStorage.setItem("token", JSON.stringify(token));
-
-  // handle errors
-  return user_id;
+  return data;
 }

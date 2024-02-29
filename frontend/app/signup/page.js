@@ -18,9 +18,10 @@ export default function Signup() {
 
     const handleSubmit = async (e) => {
         // Handle form submission
+        e.preventDefault()
+
         setLoading(true);
         setError(null);
-        e.preventDefault()
         await SIGNUP(email, password)
             .then((data) => {
                 if (data.error) {
