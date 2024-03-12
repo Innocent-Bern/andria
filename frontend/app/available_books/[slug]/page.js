@@ -1,6 +1,6 @@
 'use client'
 
-import Dashboard from "@/app/_components/Dashboard";
+import Dashboard from "../../_components/Dashboard";
 import styles from "../../page.module.css"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
@@ -49,9 +49,9 @@ export default function BookDetails() {
                         {
                             selectedBook.book_owners.map((image, index) => {
                                 return (
-                                <img 
-                                    onClick={(e) => setCopy(selectedBook.book_owners[e.target.id])} 
-                                    key={index} id={index} src={image.image_url} alt="availble book copy image" />)
+                                    <img
+                                        onClick={(e) => setCopy(selectedBook.book_owners[e.target.id])}
+                                        key={index} id={index} src={image.image_url} alt="availble book copy image" />)
                             })
                         }
                     </div>
