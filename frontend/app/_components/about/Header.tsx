@@ -4,6 +4,7 @@ import styles from './about.module.css';
 import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react'
+
 export default function Header() {
 	type NavStyle =
 		| { right: '0' }
@@ -34,8 +35,12 @@ export default function Header() {
 					</Link>
 				</div>
 				<div className={styles.btn_container}>
-					<div className={styles.btn}>Sign up</div>
-					<div className={styles.btn}>Login</div>
+					<div className={styles.btn}>
+						<Link href='/signup'> Sign up </Link>
+					</div>
+					<div className={styles.btn}>
+						<Link href='/login'> Login</Link>
+					</div>
 				</div>
 			</nav>
 			<MenuIcon onClick={() => toggleNav()} className={styles.menu_icon} />

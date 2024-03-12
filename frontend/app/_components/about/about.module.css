@@ -4,6 +4,7 @@
 	align-items: center;
 	height: 100vh;
 	width: 100vw;
+	padding-top: 30px;
 }
 
 .header {
@@ -111,7 +112,10 @@
 
 @media screen and (max-width: 899px) {
 	.header {
+		flex-direction: row;
 		justify-content: space-between;
+		position: fixed;
+		top: 20px;
 	}
 
 	.nav {
@@ -157,4 +161,39 @@
 		transform: scale(1.25);
 		z-index: 2;
 	}
+
+	.about {
+		margin-top: 100px;
+	}
+}
+
+@media screen and (max-width: 550px) {
+	.nav {
+		width: 80vw;
+	}
+
+	.btn {
+		font-size: 4vw;
+	}
+
+	.content h1 {
+		font-size: 12vw;
+		text-align: center;
+	}
+
+	.content p {
+		font-size: 3vw;
+	}
+
+	.what_we_do_sign_container {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.what_we_do_sign_btn {
+		font-size: 3vw;
+		width: 60vw;
+		margin-top: 10px;
+	}
+
 }
