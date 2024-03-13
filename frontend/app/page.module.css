@@ -464,7 +464,7 @@
     flex-direction: column;
     align-items: center;
     border: solid 1px black;
-    height: 400px;
+    height: fit-content;
     width: 400px;
     background-color: #fff;
     border-radius: 15px;
@@ -480,10 +480,15 @@
     width: 100%;
     height: 50px;
     border-bottom: solid 1px black;
+    margin-bottom: 10px;
 }
 
 .message_header div {
     cursor: pointer;
+}
+
+.message_container h2 {
+    margin-bottom: 10px;
 }
 
 .message_container form {
@@ -491,6 +496,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.message_container form textarea {
+    margin-bottom: 10px;
+    border: solid 1px black;
+    border-radius: 5px;
+    padding: 0 2%;
 }
 
 .message_container form .btn {
@@ -506,7 +518,7 @@
     height: 40px;
     width: 200px;
     cursor: pointer;
-    font-size: 1.5vw;
+    font-size: unset;
     font-weight: 600;
 }
 
