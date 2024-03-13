@@ -1,12 +1,17 @@
 'use client'
 import styles from './about.module.css';
-
+import Link from 'next/link'
 export default function AboutUs() {
 	return (
 		<article className={styles.about}>
 			<section className={styles.content}>
-				<h1>ANDRIA</h1>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt voluptate quaerat amet recusandae quo itaque sint! Quia accusamus quibusdam nulla similique ab dolor esse pariatur necessitatibus aliquid. Quidem, aperiam quos. </p>
+				<h1>DISCOVER NEW TITLES </h1>
+				<h2>SHARE OLD ONES</h2>
+			</section>
+			<section className={styles.abt_btn_container}>
+
+				<div > <Link href='/signup'> Sign Up </Link></div>
+				<div> <Link href='/login'> Login</Link></div>
 			</section>
 			<section className={styles.dash_display}>
 			</section>
