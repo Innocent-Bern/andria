@@ -1,9 +1,9 @@
-const backend_uri = "https://andria-backend-lnrz2crrda-uc.a.run.app/api";
+//const backend_uri = "https://andria-backend-lnrz2crrda-uc.a.run.app/api";
+const backend_uri = "http://localhost:8080/api";
 
 let token;
-let  user;
-if (typeof window !== "undefined")
-{
+let user;
+if (typeof window !== "undefined") {
     token = JSON.parse(localStorage.getItem("token"));
     user = JSON.parse(localStorage.getItem("user"));
 }

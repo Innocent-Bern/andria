@@ -9,9 +9,7 @@ import { useRouter } from 'next/navigation'
 export default function Signup() {
     // User sign up page
     const { dispatch } = useAuthContext();
-    const [email, setEmail] = useState("")
     const [loading, setLoading] = useState(false)
-    const [password, setPassword] = useState("")
     const [error, setError] = useState(null)
     const router = useRouter();
 
@@ -19,6 +17,9 @@ export default function Signup() {
     const handleSubmit = async (e) => {
         // Handle form submission
         e.preventDefault()
+        const data = new FormData(e.target);
+        const email = data.get("email");
+        const password = data.get("password");
 
         setLoading(true);
         setError(null);
@@ -52,16 +53,14 @@ export default function Signup() {
                 <label>Email Address</label>
                 <input
                     type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
+                    name="email"
                     placeholder="Email Address"
                     required
                 />
                 <label>Password</label>
                 <input
                     type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
+                    name="password"
                     placeholder="Password"
                     required
                 />

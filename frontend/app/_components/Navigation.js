@@ -37,10 +37,11 @@ export default function NavigationBar() {
                 <Link href={`/add_book`} >
                     <AddCircleOutlineOutlinedIcon className={styles.Navigation_icon} /> <span>Add</span>
                 </Link>
-                <Link href={`/ebooks`} >
+                <Link href='/ebooks' >
                     <MenuBookOutlinedIcon className={styles.Navigation_icon} /> <span>eBooks</span>
                 </Link>
-                <Link href={`/available_books`} >
+                <Link href='/chat' >
+
                     <ChatBubbleOutlineOutlinedIcon className={styles.Navigation_icon} /> <span>Chat</span>
                 </Link>
                 <Link onClick={handleLogout} href={`/`} >

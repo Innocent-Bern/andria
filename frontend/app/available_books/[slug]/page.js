@@ -1,6 +1,7 @@
 'use client'
 
 import Dashboard from "../../_components/Dashboard";
+import { useEffect } from "react";
 import styles from "../../page.module.css"
 import { useState } from "react"
 import WriteMessage from "../../_components/MessagePrompt";
@@ -12,7 +13,13 @@ export default function BookDetails() {
     if (typeof window !== "undefined") {
         selectedBook = JSON.parse(localStorage.getItem("selectedBook"));
     }
-
+    /**
+     * useEffect(() => {
+        if (copy) {
+            console.log(copy)
+        }
+    }, [copy])
+    **/
     return (
         <Dashboard>
             <div className={styles.book_details_container}>
@@ -40,7 +47,7 @@ export default function BookDetails() {
                     </div>
                 </div>
 
-                {copy && <WriteMessage styles={styles} setCopy={setCopy} />}
+                {copy && <WriteMessage owner_id={copy._id} styles={styles} setCopy={setCopy} />}
 
             </div>
         </Dashboard>

@@ -1,19 +1,35 @@
 'use client'
 
 import CloseIcon from '@mui/icons-material/Close';
+import { ADD_MESSAGE } from '../_hooks/chatApi';
 
 
-export default function WriteMessage({ setCopy, styles }) {
+export default function WriteMessage({ setCopy, styles, owner_id }) {
     const toggle = (e) => {
         if (e.target.id === "message") {
             setCopy(null);
         }
     }
-    const handleForm = (e) => {
+    const handleForm = async (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
         const message = data.get("message");
-        console.log(message);
+
+        await ADD_MESSAGE(message, owner_id)
+            .then((data) => {
+                if (data.same_user_error) {
+                    alert(data.same_user_error)
+                } else if (data.error) {
+                    //console.log(data.error);
+                    throw data.error
+                } else {
+                    //console.log(data);
+                    alert("Message sent")
+                }
+            }).catch(err => {
+                console.log(err);
+                alert("An error occurred. Please try again.")
+            })
         setCopy(null);
     }
     return (
@@ -34,7 +50,6 @@ export default function WriteMessage({ setCopy, styles }) {
                         required
                         placeholder="Enter message"
                     >
-
                     </textarea>
                     <button type="submit" className={styles.btn} >Send</button>
                 </form>

@@ -8,14 +8,16 @@ import { useRouter } from "next/navigation";
 
 export default function Login() {
     const { dispatch } = useAuthContext();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const data = new FormData(e.target);
+        const email = data.get("email");
+        const password = data.get("password");
+
         setLoading(true);
         setError(null);
         await LOGIN(email, password)
@@ -48,16 +50,14 @@ export default function Login() {
                 <label>Email Address</label>
                 <input
                     type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
+                    name="email"
                     placeholder="Email Address"
                     required
                 />
                 <label>Password</label>
                 <input
                     type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
+                    name="password"
                     placeholder="Password"
                     required
                 />

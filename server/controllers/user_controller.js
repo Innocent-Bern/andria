@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
 const mongoose = require("mongoose");
+const Chat_Session = require("../models/chat_model");
 const User = require("../models/user_model");
 const Book = require("../models/book_model");
 const { upload_book_image } = require("../cloud/uploadImage");
@@ -102,18 +103,18 @@ const add_new_copy = async (req, res) => {
 
     try {
         await upload_book_image(req.file.path)
-        .then(async (response) => {
-            // delete image from local storage
-            await unlinkAsync(req.file.path);
-            if (response.error) {
-                res.status(400).json({ error: image_data.error })
-            } else {
-                const image_name = response.fileName;
-                const image_url = response.publicUrl;
-                const added_copy = await Book.findByIdAndUpdate({ _id: book_id }, { $push: { book_owners: { _id: owner_id, image_name, image_url } } }, { new: true });
-                res.status(200).json({ added_copy });
-            }
-        })
+            .then(async (response) => {
+                // delete image from local storage
+                await unlinkAsync(req.file.path);
+                if (response.error) {
+                    res.status(400).json({ error: image_data.error })
+                } else {
+                    const image_name = response.fileName;
+                    const image_url = response.publicUrl;
+                    const added_copy = await Book.findByIdAndUpdate({ _id: book_id }, { $push: { book_owners: { _id: owner_id, image_name, image_url } } }, { new: true });
+                    res.status(200).json({ added_copy });
+                }
+            })
     } catch (error) {
         // delete image from local storage
         await unlinkAsync(req.file.path);
@@ -135,8 +136,34 @@ const get_book_google = async (req, res) => {
         })
     res.status(200).json({ data });
 }
+// get chat session 
+const get_chat_session = async (req, res) => {
 
+    const { user_id } = req.params;
+    try {
+        const chat_session = await Chat_Session.find({ members: { $in: [user_id] } });
+        res.status(200).json({ chat_session });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+// Add chat session 
+const add_chat_session = async (req, res) => {
+    const { sender_id, receiver_id, message } = req.body;
+    try {
+        const chat_session = await Chat_Session.findOneAndUpdate(
+            { members: { $all: [sender_id, receiver_id] } },
+            {
+                $push: { messages: { sender: sender_id, message, timestamp: Date.now() } },
+                $setOnInsert: { members: [sender_id, receiver_id] }
+            },
+            { new: true, upsert: true });
+        res.status(200).json({ chat_session });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 module.exports = {
     user_sign_up, user_login, available_books, google_book_search, find_book_db,
-    add_new_copy, get_book_google, add_new_book
+    add_new_copy, get_book_google, add_new_book, get_chat_session, add_chat_session
 };
