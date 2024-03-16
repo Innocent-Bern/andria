@@ -1,14 +1,7 @@
 //const backend_uri = "https://andria-backend-lnrz2crrda-uc.a.run.app/api";
 const backend_uri = "http://localhost:8080/api";
 
-let token;
-let user;
-if (typeof window !== "undefined") {
-    token = JSON.parse(localStorage.getItem("token"));
-    user = JSON.parse(localStorage.getItem("user"));
-}
-
-export async function DELETE_IMAGE(image_name) {
+export async function DELETE_IMAGE(image_name, token) {
     // Handles users deleting an image
     const res = await fetch(`${backend_uri}/delete_image`, {
         method: "POST",
@@ -23,7 +16,7 @@ export async function DELETE_IMAGE(image_name) {
     return data;
 }
 
-export async function ADD_BOOK(formData) {
+export async function ADD_BOOK(formData, token) {
     // Handles users adding a new book
     const res = await fetch(`${backend_uri}/add_new_book`, {
         method: "POST",
@@ -37,7 +30,7 @@ export async function ADD_BOOK(formData) {
     return data;
 }
 
-export async function UPDATE_BOOK_OWNERS(formData) {
+export async function UPDATE_BOOK_OWNERS(formData, token) {
     // Handles users adding a new book
     const res = await fetch(`${backend_uri}/add_new_copy`, {
         method: "POST",

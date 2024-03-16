@@ -14,14 +14,12 @@ import PreviewBookImage from '../_components/PreviewBookImage';
 
 import { GET_BOOK_GOOGLE, GET_BOOK_DB } from '../_hooks/getbooks';
 import { ADD_BOOK, UPDATE_BOOK_OWNERS } from '../_hooks/addbook';
+import { useAppSelector } from '../../lib/hooks';
 
 export default function AddBook() {
     const router = useRouter();
-
-    let owner_id;
-    if (typeof window !== "undefined") {
-        owner_id = JSON.parse(localStorage.getItem("user"));
-    }
+    const owner_id = useAppSelector((state) => state.auth.user);
+    const token = useAppSelector((state) => state.auth.token);
 
     const [searchTitle, setSearchTitle] = useState("")
     const [searchAuthor, setSearchAuthor] = useState("")
@@ -57,7 +55,7 @@ export default function AddBook() {
 
     const findBook = async (e) => {
         // check if book is in database
-        const booksDB = await GET_BOOK_DB(searchTitle, searchAuthor);
+        const booksDB = await GET_BOOK_DB(searchTitle, searchAuthor, token);
 
         if (booksDB.found_books.length > 0) {
             setNewBook(false);
@@ -81,7 +79,7 @@ export default function AddBook() {
             )
         } else {
             // Get details from google books API
-            const res = await GET_BOOK_GOOGLE(searchTitle, searchAuthor);
+            const res = await GET_BOOK_GOOGLE(searchTitle, searchAuthor, token);
 
             if (res.data.totalItems === 0) {
                 // update later to display form requiring manual entry of book details
@@ -138,7 +136,7 @@ export default function AddBook() {
             formData.append('thumbnail_url', thumbnail);
 
             const response = new Promise((resolve) => {
-                const res = ADD_BOOK(formData)
+                const res = ADD_BOOK(formData, token)
                 if (res) {
                     resolve(res);
                 }
@@ -155,7 +153,7 @@ export default function AddBook() {
         } else {
             formData.append('book_id', book_id);
             const response = new Promise((resolve) => {
-                const res = UPDATE_BOOK_OWNERS(formData)
+                const res = UPDATE_BOOK_OWNERS(formData, token)
                 if (res) {
                     resolve(res);
                 }

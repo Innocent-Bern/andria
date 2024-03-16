@@ -6,7 +6,34 @@ const cors = require('cors');
 
 const user_routes = require("./routes/user_routes");
 
+//
+const { Server } = require('socket.io');
+const { createServer } = require('node:http');
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000/*",
+    }
+});
+//
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+//middleware to authenticate user
+/*io.use((socket, next) => {
+  const username = socket.handshake.auth.username;
+  if (!username) {
+    return next(new Error("invalid username"));
+  }
+  socket.username = username;
+  next();
+});*/
 
 // middleware
 app.use(cors())
@@ -25,11 +52,11 @@ app.use("/api/", user_routes);
 
 //connect to db
 mongoose.connect(process.env.MONGODB_URI)
-    .then(()=> {
+    .then(() => {
         console.log("Connected to db");
     })
 
 const port = parseInt(process.env.PORT) || 8080;
-app.listen(port, () => {
-  console.log(`helloworld: listening on port ${port}`);
+server.listen(port, () => {
+    console.log(`helloworld: listening on port ${port}`);
 });

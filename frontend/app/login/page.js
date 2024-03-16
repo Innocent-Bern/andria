@@ -2,12 +2,14 @@
 
 import { useState } from "react"
 import styles from "../page.module.css"
-import { LOGIN } from "../_hooks/userauth";
-import { useAuthContext } from "../_hooks/useAuthContext";
+import { login } from "../_hooks/userauth";
 import { useRouter } from "next/navigation";
 
+import { useAppDispatch } from '../../lib/hooks';
+import { LOGIN } from '../../lib/features/auth/authSlice';
+
 export default function Login() {
-    const { dispatch } = useAuthContext();
+    const dispatch = useAppDispatch();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -20,7 +22,7 @@ export default function Login() {
 
         setLoading(true);
         setError(null);
-        await LOGIN(email, password)
+        await login(email, password)
             .then((data) => {
                 if (data.error) {
                     setError(data.error);
@@ -28,11 +30,7 @@ export default function Login() {
                     const user = data.user_id;
                     const token = data.token;
 
-                    // Add user to local storage
-                    localStorage.setItem("user", JSON.stringify(user));
-                    localStorage.setItem("token", JSON.stringify(token));
-
-                    dispatch({ type: "LOGIN", payload: user })
+                    dispatch(LOGIN( { user, token }))
 
                     // Redirect to available books page
                     router.push('/available_books')

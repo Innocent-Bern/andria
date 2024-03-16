@@ -147,12 +147,13 @@ const get_chat_session = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+
 // Add chat session 
 const add_chat_session = async (req, res) => {
     const { sender_id, receiver_id, message } = req.body;
     try {
         const chat_session = await Chat_Session.findOneAndUpdate(
-            { members: { $all: [sender_id, receiver_id] } },
+            { members: { $all: [{ $elemMatch: { $eq: sender_id } }, { $elemMatch: { $eq: receiver_id } }] } },
             {
                 $push: { messages: { sender: sender_id, message, timestamp: Date.now() } },
                 $setOnInsert: { members: [sender_id, receiver_id] }

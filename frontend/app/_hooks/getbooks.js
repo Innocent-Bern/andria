@@ -1,14 +1,7 @@
 //const backend_uri = "https://andria-backend-lnrz2crrda-uc.a.run.app/api";
 const backend_uri = "http://localhost:8080/api";
 
-let token;
-let user;
-if (typeof window !== "undefined") {
-    token = JSON.parse(localStorage.getItem("token"));
-    user = JSON.parse(localStorage.getItem("user"));
-}
-
-export async function GET_BOOKS_DB() {
+export async function GET_BOOKS_DB(token) {
     // fetches available books from the database
     const res = await fetch(`${backend_uri}/available_books`, {
         method: 'GET',
@@ -23,7 +16,7 @@ export async function GET_BOOKS_DB() {
     return data;
 }
 
-export async function GET_BOOK_DB(title, author) {
+export async function GET_BOOK_DB(title, author, token) {
     // Search for a specific book
     const res = await fetch(`${backend_uri}/find_book`, {
         method: 'POST',
@@ -39,11 +32,11 @@ export async function GET_BOOK_DB(title, author) {
     return data;
 }
 
-export async function GETUSERSBOOKS() {
+export async function GETUSERSBOOKS(token) {
     // return books belonging to the current user
 }
 
-export async function GET_BOOK_GOOGLE(title, author) {
+export async function GET_BOOK_GOOGLE(title, author, token) {
     // fetches available books from google books api
     const res = await fetch(`${backend_uri}/get_books_google`, {
         method: 'POST',

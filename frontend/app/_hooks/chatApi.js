@@ -1,11 +1,6 @@
 const backend_uri = "http://localhost:8080/api";
-let token;
-let user;
-if (typeof window !== "undefined") {
-    token = JSON.parse(localStorage.getItem("token"));
-    user = JSON.parse(localStorage.getItem("user"));
-}
-export async function GET_CHAT() {
+
+export async function GET_CHAT(user, token) {
 
     const respsonse = await fetch(`${backend_uri}/get_chat/${user}`, {
         method: 'GET',
@@ -18,7 +13,7 @@ export async function GET_CHAT() {
     const data = await respsonse.json();
     return data
 }
-export async function ADD_MESSAGE(message, receiver) {
+export async function ADD_MESSAGE(message, receiver, user, token) {
     if (receiver == user) {
         return { same_user_error: "This copy belongs to you" }
     }

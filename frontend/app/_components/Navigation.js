@@ -8,22 +8,16 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useAuthContext } from '../_hooks/useAuthContext';
+import { useAppDispatch } from '../../lib/hooks';
+import { LOGOUT } from '../../lib/features/auth/authSlice';
 import styles from "../page.module.css"
 
-export default function NavigationBar() {
-    let router = useRouter();
-    const { dispatch } = useAuthContext();
+export default function NavigationBar() {;
+    const dispatch  = useAppDispatch();
 
     const handleLogout = () => {
 
-        dispatch({ type: "LOGOUT" })
-
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedBook");
-        router.push("/");
+        dispatch(LOGOUT());
     }
     return (
         <div className={styles.Books_navigation}>

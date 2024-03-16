@@ -2,9 +2,11 @@
 
 import CloseIcon from '@mui/icons-material/Close';
 import { ADD_MESSAGE } from '../_hooks/chatApi';
-
+import { useAppSelector } from '../../lib/hooks';
 
 export default function WriteMessage({ setCopy, styles, owner_id }) {
+    const user = useAppSelector(state => state.auth.user);
+    const token = useAppSelector(state => state.auth.token);
     const toggle = (e) => {
         if (e.target.id === "message") {
             setCopy(null);
@@ -15,7 +17,7 @@ export default function WriteMessage({ setCopy, styles, owner_id }) {
         const data = new FormData(e.target);
         const message = data.get("message");
 
-        await ADD_MESSAGE(message, owner_id)
+        await ADD_MESSAGE(message, owner_id, user, token)
             .then((data) => {
                 if (data.same_user_error) {
                     alert(data.same_user_error)

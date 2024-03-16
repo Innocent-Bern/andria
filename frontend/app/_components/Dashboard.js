@@ -1,7 +1,7 @@
 import NavigationBar from "./Navigation";
 import styles from '../page.module.css'
-
-export default function Dashboard({ children }) {
+import requireAdminAuth from "../requireAuth";
+function Dashboard({ children }) {
     return (
         <main className={styles.Books}>
             <NavigationBar />
@@ -11,3 +11,5 @@ export default function Dashboard({ children }) {
         </main>
     )
 }
+
+export default requireAdminAuth(Dashboard);

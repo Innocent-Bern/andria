@@ -2,13 +2,15 @@
 
 import { useState } from 'react'
 import styles from '../page.module.css'
-import { SIGNUP } from '../_hooks/userauth'
-import { useAuthContext } from '../_hooks/useAuthContext'
+import { signup } from '../_hooks/userauth'
 import { useRouter } from 'next/navigation'
+
+import { useAppDispatch } from '../../lib/hooks';
+import { LOGIN } from '../../lib/features/auth/authSlice';
 
 export default function Signup() {
     // User sign up page
-    const { dispatch } = useAuthContext();
+    const dispatch = useAppDispatch()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const router = useRouter();
@@ -23,19 +25,14 @@ export default function Signup() {
 
         setLoading(true);
         setError(null);
-        await SIGNUP(email, password)
+        await signup(email, password)
             .then((data) => {
                 if (data.error) {
                     setError(data.error);
                 } else {
                     const user = data.user_id;
                     const token = data.token;
-
-                    // Add user to local storage
-                    localStorage.setItem("user", JSON.stringify(user));
-                    localStorage.setItem("token", JSON.stringify(token));
-
-                    dispatch({ type: "LOGIN", payload: user })
+                    dispatch(LOGIN({ user, token }))
 
                     // Redirect to available books page
                     router.push('/available_books')

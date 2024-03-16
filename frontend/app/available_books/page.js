@@ -10,12 +10,14 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAppSelector } from '../../lib/hooks';
 
 export default function AvailableBooks() {
     const [searchTitle, setSearchTitle] = useState("")
     const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(null)
     const router = useRouter();
+    const token = useAppSelector(state => state.auth.token);
 
     const handleBookSearch = async (e) => {
         e.preventDefault();
@@ -24,12 +26,12 @@ export default function AvailableBooks() {
     useEffect(() => {
         (async () => {
             // Get available books from the db
-            const data = await GET_BOOKS_DB();
+            const data = await GET_BOOKS_DB(token);
             setBooks(data.available_books);
         })()
         console.log("I run once");
     }, [])
-    
+
     const handleSelectedBook = (book) => {
         // toggle view when a books is selected
         // book ? setSelectedBook(book) : !selectedBook ? setSelectedBook(book) : setSelectedBook(null)
