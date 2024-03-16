@@ -12,11 +12,13 @@ import {
 	REGISTER,
 } from 'redux-persist'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import createWebStorage from "redux-persist/es/storage/createWebStorage";
 
 // reducers
 import authReducer from './features/auth/authSlice';
+import selectBookReducer from './features/selectBook/selectBookSlice';
+import selectChatReducer from './features/selectChat/selectChatSlice';
 
-import createWebStorage from "redux-persist/es/storage/createWebStorage";
 
 export function createPersistStore() {
 	const isServer = typeof window === "undefined";
@@ -46,7 +48,9 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-	auth: authReducer
+	auth: authReducer,
+	selectBook: selectBookReducer,
+	selectChat: selectChatReducer
 });
 
 const persistedReducer = persistReducer(

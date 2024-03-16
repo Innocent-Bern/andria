@@ -1,6 +1,7 @@
 import NavigationBar from "./Navigation";
 import styles from '../page.module.css'
 import requireAdminAuth from "../requireAuth";
+import AsideBooks from "./AsideBooks";
 function Dashboard({ children }) {
     return (
         <main className={styles.Books}>

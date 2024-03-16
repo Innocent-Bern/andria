@@ -5,14 +5,12 @@ import { useEffect } from "react";
 import styles from "../../page.module.css"
 import { useState } from "react"
 import WriteMessage from "../../_components/MessagePrompt";
+import { useAppSelector } from "../../../lib/hooks";
 
 export default function BookDetails() {
     const [copy, setCopy] = useState(null);
+    const selectedBook = useAppSelector(state => state.selectBook.selectedBook);
 
-    let selectedBook;
-    if (typeof window !== "undefined") {
-        selectedBook = JSON.parse(localStorage.getItem("selectedBook"));
-    }
     /**
      * useEffect(() => {
         if (copy) {

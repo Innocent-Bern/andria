@@ -10,7 +10,8 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppSelector } from '../../lib/hooks';
+import { useAppSelector, useAppDispatch } from '../../lib/hooks';
+import { SELECTBOOK } from '../../lib/features/selectBook/selectBookSlice';
 
 export default function AvailableBooks() {
     const [searchTitle, setSearchTitle] = useState("")
@@ -18,6 +19,7 @@ export default function AvailableBooks() {
     const [selectedBook, setSelectedBook] = useState(null)
     const router = useRouter();
     const token = useAppSelector(state => state.auth.token);
+    const dispatch = useAppDispatch();
 
     const handleBookSearch = async (e) => {
         e.preventDefault();
@@ -37,7 +39,7 @@ export default function AvailableBooks() {
         // book ? setSelectedBook(book) : !selectedBook ? setSelectedBook(book) : setSelectedBook(null)
         // add book to local storage
         setSelectedBook(book)
-        localStorage.setItem("selectedBook", JSON.stringify(book))
+        dispatch(SELECTBOOK({ book }))
         router.push(`/available_books/${book._id}`)
     }
 

@@ -4,7 +4,6 @@ import styles from './chat.module.css'
 import { useState, useEffect } from 'react'
 import { GET_CHAT } from '../../_hooks/chatApi';
 import { useAppSelector } from '../../../lib/hooks';
-
 /*
  * empty chat component
  * function to retireve user chats
@@ -16,20 +15,19 @@ function EmptyChat() {
 		</div>
 	)
 }
+
+import { SELECTCHAT } from '../../../lib/features/selectChat/selectChatSlice';
+import { useAppDispatch } from '../../../lib/hooks';
+import { useRouter } from 'next/navigation';
 function PreviewChat({ session }) {
-	/**
-	 * message sender
-	 * if it's the current user, display message right
-	 *
-	 * components:
-	 * header with receiver name and option to close chat
-	 * display according sender
-	 * message prompt and send btn 
-	 * 
-	 * on click go to display chat
-	 */
+	const dispatch = useAppDispatch();
+	const router = useRouter();
+	const handleClick = () => {
+		dispatch(SELECTCHAT({ chat: session }))
+		router.push(`/chat/${session._id}`)
+	}
 	return (
-		<div className={styles.preview}>
+		<div onClick={handleClick} className={styles.preview}>
 			<h1>Preview</h1>
 		</div>
 	)
@@ -56,7 +54,12 @@ export default function Chat() {
 				empty ?
 					<EmptyChat /> :
 					chatSession.map((session, index) => {
-						return <PreviewChat key={index} />
+						return <PreviewChat
+							id={session._id}
+							key={index}
+							session={session}
+						/>
+
 					})
 			}
 		</article>
