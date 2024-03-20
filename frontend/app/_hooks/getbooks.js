@@ -1,9 +1,8 @@
-//const backend_uri = "https://andria-backend-lnrz2crrda-uc.a.run.app/api";
-const backend_uri = "http://localhost:8080/api";
+const backend_uri = process.env.NEXT_PUBLIC_BACKEND;
 
 export async function GET_BOOKS_DB(token) {
     // fetches available books from the database
-    const res = await fetch(`${backend_uri}/available_books`, {
+    const res = await fetch(`${backend_uri}/api/available_books`, {
         method: 'GET',
         mode: "cors",
         headers: {
@@ -18,7 +17,7 @@ export async function GET_BOOKS_DB(token) {
 
 export async function GET_BOOK_DB(title, author, token) {
     // Search for a specific book
-    const res = await fetch(`${backend_uri}/find_book`, {
+    const res = await fetch(`${backend_uri}/api/find_book`, {
         method: 'POST',
         mode: "cors",
         headers: {
@@ -38,7 +37,7 @@ export async function GETUSERSBOOKS(token) {
 
 export async function GET_BOOK_GOOGLE(title, author, token) {
     // fetches available books from google books api
-    const res = await fetch(`${backend_uri}/get_books_google`, {
+    const res = await fetch(`${backend_uri}/api/get_books_google`, {
         method: 'POST',
         mode: 'cors',
         headers: {

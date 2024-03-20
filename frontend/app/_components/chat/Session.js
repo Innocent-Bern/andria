@@ -1,48 +1,66 @@
 'use client'
+import { io } from "socket.io-client";
 import { useEffect, useState } from 'react'
 import styles from './chat.module.css'
-import { useAppSelector } from '../../../lib/hooks';
-/**
- * message sender
- * if it's the current user, display message right
- *
- * components:
- * header with receiver name and option to close chat
- * display according sender
- * message prompt and send btn 
- * 
- * on click go to display chat
- */
-
-function Message({ message }) {
-	return (
-		<section className={styles.message_container} >
-			<div className={styles.message}>
-				{message}
-			</div>
-		</section>
-	)
-}
+import { useAppSelector, useAppDispatch } from '../../../lib/hooks';
+import { useRouter } from 'next/navigation';
+import { SELECTCHAT } from '../../../lib/features/selectChat/selectChatSlice';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Session() {
-	/**
-	 * append new message to the session object
-	 * update the chat 
-	 * send new data to db -- append new  message to messages array
-	*/
+	const dispatch = useAppDispatch()
+	const router = useRouter()
 	const chat = useAppSelector(state => state.selectChat.chat)
 	const user = useAppSelector(state => state.auth.user)
+	const receiver = chat.members[0] === user ? chat.members[1] : chat.members[0]
+	const [messages, setMessages] = useState(chat.messages);
+
+	const socket = io(process.env.NEXT_PUBLIC_BACKEND);
+	const handleJoin = () => {
+		socket.emit("join_room", chat._id);
+	}
+	const sendMessage = async (e) => {
+		e.preventDefault()
+		const data = new FormData(e.target);
+		e.target.reset()
+
+		const msgData = {
+			roomId: chat._id,
+			sender_id: user,
+			receiver_id: receiver,
+			message: data.get('message'),
+		};
+		setMessages([...messages, { sender: user, message: data.get('message'), _id: Math.floor(Math.random() * 11) }]);
+		socket.emit("send_message", msgData);
+	}
 	useEffect(() => {
-		console.log(chat);
-	}, [])
+		handleJoin();
+		socket.on("receive_message", (chat) => {
+			setMessages(chat.messages);
+			dispatch(SELECTCHAT({ chat }));
+		});
+	}, [socket])
 	return (
 		<article className={styles.session}>
-			<section>
+			<header>
 				<h1> Chat   </h1>
-				<div> Close </div>
-			</section>
-
-			<form >
+				<div style={{ cursor: 'pointer' }} onClick={() => router.push('/chat')} > <CloseIcon /> </div>
+			</header>
+			{
+				messages.map((message, index) => {
+					return (
+						<section
+							style={message.sender === user ? { alignSelf: 'flex-end' } : { alignSelf: 'flex-start' }}
+							key={index}
+							className={styles.message_container}
+						>
+							<p className={styles.message}>
+								{message.message}
+							</p>
+						</section>)
+				})
+			}
+			<form onSubmit={sendMessage} >
 				<textarea
 					name="message"
 					rows="3"

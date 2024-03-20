@@ -1,8 +1,8 @@
-const backend_uri = "http://localhost:8080/api";
+const backend_uri = process.env.NEXT_PUBLIC_BACKEND;
 
 export async function GET_CHAT(user, token) {
 
-    const respsonse = await fetch(`${backend_uri}/get_chat/${user}`, {
+    const respsonse = await fetch(`${backend_uri}/api/get_chat/${user}`, {
         method: 'GET',
         mode: "cors",
         headers: {
@@ -17,7 +17,7 @@ export async function ADD_MESSAGE(message, receiver, user, token) {
     if (receiver == user) {
         return { same_user_error: "This copy belongs to you" }
     }
-    const respsonse = await fetch(`${backend_uri}/add_chat`, {
+    const respsonse = await fetch(`${backend_uri}/api/add_chat`, {
         method: 'POST',
         mode: "cors",
         headers: {

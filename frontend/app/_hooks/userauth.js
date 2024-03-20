@@ -1,8 +1,7 @@
-//const backend_uri = "https://andria-backend-lnrz2crrda-uc.a.run.app/api";
-const backend_uri = "http://localhost:8080/api";
+const backend_uri = process.env.NEXT_PUBLIC_BACKEND;
 
 export async function signup(email, password) {
-  const res = await fetch(`${backend_uri}/signup`, {
+  const res = await fetch(`${backend_uri}/api/signup`, {
     method: 'POST',
     mode: "cors",
     headers: {
@@ -16,7 +15,7 @@ export async function signup(email, password) {
 }
 
 export async function login(email, password) {
-  const res = await fetch(`${backend_uri}/login`, {
+  const res = await fetch(`${backend_uri}/api/login`, {
     method: 'POST',
     mode: "cors",
     headers: {
