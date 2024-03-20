@@ -1,4 +1,5 @@
 'use client'
+
 import { io } from "socket.io-client";
 import { useEffect, useState } from 'react'
 import styles from './chat.module.css'

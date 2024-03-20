@@ -238,9 +238,10 @@ export default function AddBook() {
                 {
                     selectedBook && <BookDetails handleSelectedBook={handleSelectedBook} selectedBook={selectedBook} />
                 }
-                <div className={styles.add_book_aside}>
-                    <AsideBooks handleSelectedBook={handleSelectedBook} /*getBooksData={getBooksData}*/ />
-                </div>
+                <section className={styles.add_side_books} >
+                    <AsideBooks />
+                </section>
+
 
                 <form style={{ display: "none" }}>
 

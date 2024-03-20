@@ -1,13 +1,14 @@
 'use client'
 
 import styles from './chat.module.css'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { GET_CHAT } from '../../_hooks/chatApi';
 import { useAppSelector } from '../../../lib/hooks';
-/*
- * empty chat component
- * function to retireve user chats
- */
+
+import { SELECTCHAT } from '../../../lib/features/selectChat/selectChatSlice';
+import { useAppDispatch } from '../../../lib/hooks';
+import { useRouter } from 'next/navigation';
+
 function EmptyChat() {
 	return (
 		<div className={styles.empty}>
@@ -16,19 +17,18 @@ function EmptyChat() {
 	)
 }
 
-import { SELECTCHAT } from '../../../lib/features/selectChat/selectChatSlice';
-import { useAppDispatch } from '../../../lib/hooks';
-import { useRouter } from 'next/navigation';
 function PreviewChat({ session }) {
 	const dispatch = useAppDispatch();
 	const router = useRouter();
+	const lastMessage = session.messages[session.messages.length - 1]
 	const handleClick = () => {
 		dispatch(SELECTCHAT({ chat: session }))
 		router.push(`/chat/${session._id}`)
 	}
 	return (
 		<div onClick={handleClick} className={styles.preview}>
-			<h1>Preview</h1>
+			<h2> {lastMessage.message} </h2>
+			<p> {new Date(lastMessage.timestamp).toUTCString()} </p>
 		</div>
 	)
 }
@@ -44,7 +44,7 @@ export default function Chat() {
 			if (data.chat_session.length > 0) {
 				setEmpty(false);
 			}
-			console.log(data)
+			//console.log(data)
 			setChatSession(data.chat_session);
 		})()
 	}, [])
@@ -53,14 +53,17 @@ export default function Chat() {
 			{
 				empty ?
 					<EmptyChat /> :
-					chatSession.map((session, index) => {
-						return <PreviewChat
-							id={session._id}
-							key={index}
-							session={session}
-						/>
+					<React.Fragment>
+						<h1>Messages</h1>
+						{chatSession.map((session, index) => {
+							return <PreviewChat
+								id={session._id}
+								key={index}
+								session={session}
+							/>
 
-					})
+						})}
+					</React.Fragment>
 			}
 		</article>
 	)
