@@ -1,7 +1,7 @@
 'use client'
 
 import Dashboard from '../_components/Dashboard';
-import AsideBooks from '../_components/AsideBooks';
+import SideContent from '../_components/SideContent';
 import styles from '../page.module.css'
 import { GET_BOOKS_DB } from '../_hooks/getbooks';
 
@@ -71,11 +71,8 @@ export default function AvailableBooks() {
                         }
                     </div>
                 </div>
-
-                <section className={styles.side_books}>
-                    <AsideBooks />
-                </section>
             </div>
+            <SideContent />
         </Dashboard>
     )
 }

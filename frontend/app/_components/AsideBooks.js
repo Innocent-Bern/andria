@@ -32,7 +32,11 @@ export default function AsideBooks() {
                 books &&
                 books.map((book, index) => {
                     if (index < 3) {
-                        return <img key={index} onClick={e => handleSelectedBook(book)} className={styles.recent_books} src={book.thumbnail_url} alt="recently added book image" />
+                        return <img
+                            key={index}
+                            onClick={e => handleSelectedBook(book)}
+                            className={styles.recent_books}
+                            src={book.thumbnail_url} alt="recently added book image" />
                     }
                 })
             }

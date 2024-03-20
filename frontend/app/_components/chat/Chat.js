@@ -4,7 +4,6 @@ import styles from './chat.module.css'
 import React, { useState, useEffect } from 'react'
 import { GET_CHAT } from '../../_hooks/chatApi';
 import { useAppSelector } from '../../../lib/hooks';
-
 import { SELECTCHAT } from '../../../lib/features/selectChat/selectChatSlice';
 import { useAppDispatch } from '../../../lib/hooks';
 import { useRouter } from 'next/navigation';

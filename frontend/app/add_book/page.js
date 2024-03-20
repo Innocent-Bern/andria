@@ -8,7 +8,7 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import styles from '../page.module.css'
 
 import Dashboard from '../_components/Dashboard';
-import AsideBooks from '../_components/AsideBooks';
+import SideContent from '../_components/SideContent';
 import BookDetails from '../_components/BookDetails';
 import PreviewBookImage from '../_components/PreviewBookImage';
 
@@ -238,10 +238,8 @@ export default function AddBook() {
                 {
                     selectedBook && <BookDetails handleSelectedBook={handleSelectedBook} selectedBook={selectedBook} />
                 }
-                <section className={styles.add_side_books} >
-                    <AsideBooks />
-                </section>
 
+                <SideContent />
 
                 <form style={{ display: "none" }}>
 
