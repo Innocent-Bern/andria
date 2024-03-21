@@ -25,16 +25,6 @@ export default function BookDetails({ selectedBook, handleSelectedBook }) {
                         <p><span>Author: </span>{selectedBook.author}</p>
                         <p><span>Genre: </span>{selectedBook.genre}</p>
                     </div>
-                    {/*
-                        copy &&
-                        <div className={styles.owner_details}>
-                            <h2>Owner Details</h2>
-                            <p><span>Name: </span>{copy.owner_name}</p>
-                            <p><span>Location: </span>{copy.owner_location}</p>
-                            <p><span>Contact: </span>{copy.owner_contact}</p>
-                            <button onClick={() => router.push(`/chat/${copy.owner_id}`)}>Chat</button>
-                        </div>*/
-                    }
                 </div>
 
                 <div className={styles.available_copies}>
@@ -43,9 +33,9 @@ export default function BookDetails({ selectedBook, handleSelectedBook }) {
                         {
                             selectedBook.book_owners.map((image, index) => {
                                 return (
-                                <img 
-                                    onClick={(e) => setCopy(selectedBook.book_owners[e.target.id])} 
-                                    key={index} id={index} src={image.image_url} alt="availble book copy image" />)
+                                    <img
+                                        onClick={(e) => setCopy(selectedBook.book_owners[e.target.id])}
+                                        key={index} id={index} src={image.image_url} alt="availble book copy image" />)
                             })
                         }
                     </div>

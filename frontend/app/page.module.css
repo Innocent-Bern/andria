@@ -595,7 +595,8 @@
 
 .found_book_details {
     background-color: #fff;
-    height: 80vh;
+    min-height: 80vh;
+    height: fit-content;
     width: 60vw;
     cursor: default;
     display: flex;
@@ -1080,7 +1081,8 @@
 
     .found_book_details {
         width: 100vw;
-        height: 100vh;
+        min-height: 100vh;
+        height: fit-content;
         border-radius: 0;
         padding: 5%;
         overflow: scroll;
