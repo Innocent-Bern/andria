@@ -4,6 +4,8 @@ import styles from '../_components/about/about.module.css';
 
 import Header from '../_components/about/Header'
 import AboutUs from '../_components/about/AboutUS'
+import Features from '../_components/about/Features'
+import Footer from '../_components/about/Footer'
 export default function About() {
 	/**
 	 * components
@@ -17,10 +19,8 @@ export default function About() {
 		<main className={styles.main}>
 			<Header />
 			<AboutUs />
-			<article></article>
-			<article></article>
-			<article></article>
-			<footer></footer>
+			<Features />
+			<Footer />
 		</main>
 	)
 }

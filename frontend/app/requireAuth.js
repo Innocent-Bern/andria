@@ -11,7 +11,7 @@ const requireAdminAuth = (Component) => {
 
     useEffect(() => {
       if (!isAuthenticated) {
-        redirect("/login");
+        redirect("/about");
       }
     }, [isAuthenticated]);
 

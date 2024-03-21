@@ -10,8 +10,8 @@ export default function AboutUs() {
 			</section>
 			<section className={styles.abt_btn_container}>
 
-				<div > <Link href='/signup'> Sign Up </Link></div>
-				<div> <Link href='/login'> Login</Link></div>
+				<Link href='/signup'><div> Sign Up</div> </Link>
+				<Link href='/login'><div> Sign Up</div> </Link>
 			</section>
 			<section className={styles.dash_display}>
 			</section>
