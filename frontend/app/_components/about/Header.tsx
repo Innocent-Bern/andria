@@ -43,7 +43,12 @@ export default function Header() {
 					</div>
 				</div>
 			</nav>
-			<MenuIcon onClick={() => toggleNav()} className={styles.menu_icon} />
+			<div
+				className={styles.menu_icon}
+				onClick={() => toggleNav()}
+			>
+				<MenuIcon />
+			</div>
 		</header>
 	)
 }

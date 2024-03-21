@@ -31,8 +31,19 @@ export async function GET_BOOK_DB(title, author, token) {
     return data;
 }
 
-export async function GETUSERSBOOKS(token) {
-    // return books belonging to the current user
+export async function GET_USER_BOOKS(user_id, token) {
+    // returns books belonging to current user
+    const res = await fetch(`${backend_uri}/api/get_user_books/${user_id}`, {
+        method: 'GET',
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    const data = await res.json();
+    return data;
 }
 
 export async function GET_BOOK_GOOGLE(title, author, token) {

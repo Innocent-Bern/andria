@@ -12,8 +12,9 @@ import { useAppDispatch } from '../../lib/hooks';
 import { LOGOUT } from '../../lib/features/auth/authSlice';
 import styles from "../page.module.css"
 
-export default function NavigationBar() {;
-    const dispatch  = useAppDispatch();
+export default function NavigationBar() {
+    ;
+    const dispatch = useAppDispatch();
 
     const handleLogout = () => {
 
@@ -26,14 +27,14 @@ export default function NavigationBar() {;
                     <HomeOutlinedIcon className={styles.Navigation_icon} /> <span>Home</span>
                 </Link>
                 <Link href={`/profile`} >
-                    <SentimentSatisfiedAltOutlinedIcon className={styles.Navigation_icon} /> <span>Profile</span>
+                    <SentimentSatisfiedAltOutlinedIcon className={styles.Navigation_icon} /> <span>My Books</span>
                 </Link>
                 <Link href={`/add_book`} >
                     <AddCircleOutlineOutlinedIcon className={styles.Navigation_icon} /> <span>Add</span>
                 </Link>
-                <Link href='/ebooks' >
+                {/* <Link href='/ebooks' >
                     <MenuBookOutlinedIcon className={styles.Navigation_icon} /> <span>eBooks</span>
-                </Link>
+                </Link> */}
                 <Link href='/chat' >
 
                     <ChatBubbleOutlineOutlinedIcon className={styles.Navigation_icon} /> <span>Chat</span>
