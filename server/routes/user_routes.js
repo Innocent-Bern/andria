@@ -7,7 +7,7 @@ const {
     user_sign_up, user_login, available_books,
     google_book_search, find_book_db, add_new_copy,
     get_book_google, add_new_book,
-    get_chat_session, add_chat_session
+    get_chat_session, add_chat_session, get_user_books
 } = require("../controllers/user_controller");
 
 //user sign_up route
@@ -43,5 +43,7 @@ router.get('/get_chat/:user_id', get_chat_session);
 //add chat session
 router.post('/add_chat/', add_chat_session);
 
+// get user's books
+router.get('/get_user_books/:user_id', get_user_books);
 
 module.exports = router;

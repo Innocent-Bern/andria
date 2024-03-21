@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const bookSchema = new mongoose.Schema({
-    title : {
-        type : String,
+    title: {
+        type: String,
     },
-    author : {
-        type : String,
+    author: {
+        type: String,
     },
-    genre : {
+    genre: {
         type: String
     },
     thumbnail_url: {
@@ -15,15 +15,9 @@ const bookSchema = new mongoose.Schema({
     },
     book_owners: [
         {
-            owner_id: {
-                type: String
-            },
-            image_name: {
-                type: String,
-            },
-            image_url: {
-                type: String
-            }
+            owner_email: String,
+            image_name: String,
+            image_url: String
         }
     ]
 }, { timestamps: true })

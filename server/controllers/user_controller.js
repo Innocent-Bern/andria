@@ -1,6 +1,7 @@
 require("dotenv").config()
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
+const ObjectId = require('mongodb').ObjectId;
 
 const mongoose = require("mongoose");
 const Chat_Session = require("../models/chat_model");
@@ -164,7 +165,22 @@ const add_chat_session = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+
+// get user's books
+const get_user_books = async (req, res) => {
+    const { user_id } = req.params;
+    const book_id = new ObjectId(user_id);
+    try {
+        const books = await Book.find(
+            { "book_owners._id": book_id }
+        );
+        res.status(200).json({ books });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 module.exports = {
     user_sign_up, user_login, available_books, google_book_search, find_book_db,
-    add_new_copy, get_book_google, add_new_book, get_chat_session, add_chat_session
+    add_new_copy, get_book_google, add_new_book, get_chat_session, add_chat_session,
+    get_user_books
 };

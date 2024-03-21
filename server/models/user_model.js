@@ -14,22 +14,7 @@ const user_schema = new mongoose.Schema({
     },
     user_name: {
         type: String,
-    },
-    user_books: [
-        {
-            book_id: String
-        }
-    ],
-    users_lent_out_books: [
-        {
-            book_id: String
-        }
-    ],
-    users_borrowed_books: [
-        {
-            book_id: String
-        }
-    ]
+    }
 })
 
 // static signup method
